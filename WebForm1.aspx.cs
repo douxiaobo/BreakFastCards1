@@ -153,16 +153,25 @@ namespace BreakfastCards1
             GroupName_Num.Add("S500_2", "08");
             GroupName_Num.Add("SharePoint", "09");
             a.ID= DropDownList_Delete_Year.Text + Month_DigitToEng[DropDownList_Delete_Month.Text] + GroupName_Num[DropDownList_Delete_GroupName.Text];
-            db.Table_FourName.Attach(a);
-            db.Table_FourName.Remove(a);
-            db.SaveChanges();
-            Response.Redirect(Request.Url.ToString());
+            
+            if (a != null)
+            {
+                db.Table_FourName.Attach(a);
+                db.Table_FourName.Remove(a);
+                db.SaveChanges();
+                Response.Redirect(Request.Url.ToString());
+            }
+            else
+                Response.Write("Sorry！");
+            
+            
+            
+            
         }
 
         protected void Button_Revise_Click(object sender, EventArgs e)
         {
             BreakfastCardsEntities db=new BreakfastCardsEntities();
-            Table_FourName a = new Table_FourName();
 
             Dictionary<string, string> Month_DigitToEng = new Dictionary<string, string>();
             Month_DigitToEng.Add("January", "01");
@@ -188,13 +197,18 @@ namespace BreakfastCards1
             GroupName_Num.Add("S500_1", "07");
             GroupName_Num.Add("S500_2", "08");
             GroupName_Num.Add("SharePoint", "09");
-            a.ID = DropDownList_Revise_Year.Text + Month_DigitToEng[DropDownList_Revise_Month.Text] + GroupName_Num[DropDownList_Revise_GroupName.Text];
-            
-            a.Quantity= Convert.ToInt16(TextBox_Revise_Quantity.Text);
 
-            db.Entry(a.Quantity).State = System.Data.Entity.EntityState.Modified;
-            db.SaveChanges();
-            Response.Redirect(Request.Url.ToString());
+            Table_FourName a = new Table_FourName() { ID = DropDownList_Revise_Year.Text + Month_DigitToEng[DropDownList_Revise_Month.Text] + GroupName_Num[DropDownList_Revise_GroupName.Text] };
+            
+            if(a!=null)
+            {
+                db.Table_FourName.Attach(a);
+                a.Quantity = Convert.ToInt16(TextBox_Revise_Quantity.Text);
+                db.SaveChanges();
+                Response.Redirect(Request.Url.ToString());
+            }
+            else
+                Response.Write("Sorry！");
         }
     }
 }
