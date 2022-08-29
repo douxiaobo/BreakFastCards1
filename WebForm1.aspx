@@ -44,7 +44,9 @@
             Year:<asp:DropDownList ID="DropDownList_Inquiry_Year" runat="server" AutoPostBack="false"></asp:DropDownList>
             Month:<asp:DropDownList ID="DropDownList_Inquiry_Month" runat="server" AutoPostBack="false"></asp:DropDownList>
             Group Name:<asp:DropDownList ID="DropDownList_Inquiry_GroupName" runat="server" AutoPostBack="false"></asp:DropDownList>
-            <asp:Button ID="Button_Inquiry" runat="server" Text="Inquiry" />
+            <asp:Button ID="Button_Inquiry" runat="server" Text="Inquiry" OnClick="Button_Inquiry_Click" />
+            <br />
+            <asp:Label ID="Label_Inquiry" runat="server"></asp:Label>
         </div>
         <hr />
         <div>
