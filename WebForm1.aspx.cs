@@ -213,8 +213,7 @@ namespace BreakfastCards1
                 Response.Redirect(Request.Url.ToString());
             }
             else
-<<<<<<< HEAD
-                this.Response.Write("Sorry！");
+                this.Response.Write("Sorry！");//不行
         }
 
         protected void Button_Inquiry_Click(object sender, EventArgs e)
@@ -269,12 +268,8 @@ namespace BreakfastCards1
             }
             else if (DropDownList_Revise_Year.Text == "Never Choose" && DropDownList_Revise_Month.Text == "Never Choose" && DropDownList_Inquiry_GroupName.Text == "Never Choose")
             {
-                Label_Inquiry.Text = "Sorry!";
+                Label_Inquiry.Text = "Sorry!";//不行
             }
-
-=======
-                Response.Write("Sorry！");//不行
->>>>>>> c3a90693372b52fc47cec1a89728cbf530ec83ed
         }
     }
 }
