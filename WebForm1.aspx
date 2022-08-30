@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="WebForm1.aspx.cs" Inherits="BreakfastCards1.WebForm1" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="WebForm1.aspx.cs" Inherits="BreakfastCards1.WebForm1" Async="true" %>
 
 <!DOCTYPE html>
 
@@ -47,6 +47,14 @@
             <asp:Button ID="Button_Inquiry" runat="server" Text="Inquiry" OnClick="Button_Inquiry_Click" />
             <br />
             <asp:Label ID="Label_Inquiry" runat="server"></asp:Label>
+        </div>
+        <hr />
+        <div>
+            Year:<asp:DropDownList ID="DropDownList_Json_Year" runat="server" AutoPostBack="false"></asp:DropDownList>
+            Month:<asp:DropDownList ID="DropDownList_Json_Month" runat="server" AutoPostBack="false"></asp:DropDownList>
+            <asp:Button ID="Button_Json" runat="server" Text="Workdays" OnClick="Button_Json_Click" />
+            <br />
+            <asp:Label ID="Label_Json" runat="server"></asp:Label>
         </div>
         <hr />
         <div>
