@@ -47,8 +47,34 @@
             <asp:Button ID="Button_Inquiry" runat="server" Text="Inquiry" OnClick="Button_Inquiry_Click" />
             <br />
             <asp:Label ID="Label_Inquiry" runat="server"></asp:Label>
+            <br />
+            <asp:GridView ID="GridView_Inquiry" runat="server"></asp:GridView>
         </div>
-        <hr />
+        <br />
+        <div>
+            Actual Breakfast:实际早餐
+        </div>
+        <br />
+        <div>
+            Add in Actual Breakfast:增加早餐卡数量<br />
+            Year:<asp:DropDownList ID="DropDownList_ActualBreakfast_AddYear" runat="server" AutoPostBack="false"></asp:DropDownList>
+            Month:<asp:DropDownList ID="DropDownList_ActualBreakfast_AddMonth" runat="server" AutoPostBack="false"></asp:DropDownList>
+            Group Name:<asp:DropDownList ID="DropDownList_ActualBreakfast_AddGroupName" runat="server" AutoPostBack="false"></asp:DropDownList>
+            <asp:Button ID="Button_Actual_Breakfast_Add" runat="server" Text="Add"></asp:Button>
+        </div>
+        <br />
+        <div>
+            Inquiry in Actual Breakfast:查询实际早餐<br />
+            Year:<asp:DropDownList ID="DropDownList_ActualBreakfast_InquiryYear" runat="server" AutoPostBack="false"></asp:DropDownList>
+            Month:<asp:DropDownList ID="DropDownList_ActualBreakfast_InquiryMonth" runat="server" AutoPostBack="false"></asp:DropDownList>
+            Group Name:<asp:DropDownList ID="DropDownList_ActualBreakfast_InquiryGroupName" runat="server" AutoPostBack="false"></asp:DropDownList>
+            <asp:Button ID="Button_Actual_Breakfast_Inquiry" runat="server" Text="Inquiry"></asp:Button>
+        </div>
+        <br />
+        <div>
+            查询月份的工作日天数
+        </div>
+        <br />
         <div>
             Year:<asp:DropDownList ID="DropDownList_Json_Year" runat="server" AutoPostBack="false"></asp:DropDownList>
             Month:<asp:DropDownList ID="DropDownList_Json_Month" runat="server" AutoPostBack="false"></asp:DropDownList>
@@ -56,7 +82,6 @@
             <br />
             <asp:Label ID="Label_Json" runat="server"></asp:Label>
         </div>
-        <hr />
         <div>
             <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" DataKeyNames="ID" DataSourceID="SqlDataSource1">
                 <Columns>

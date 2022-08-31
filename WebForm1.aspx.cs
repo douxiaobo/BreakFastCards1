@@ -40,6 +40,8 @@ namespace BreakfastCards1
                 DropDownList_Revise_Year.Items.Add(i.ToString());
                 DropDownList_Inquiry_Year.Items.Add(i.ToString());
                 DropDownList_Json_Year.Items.Add(i.ToString());
+                DropDownList_ActualBreakfast_AddYear.Items.Add(i.ToString());
+                DropDownList_ActualBreakfast_InquiryYear.Items.Add(i.ToString());
             }
             
             //Month月份
@@ -64,6 +66,8 @@ namespace BreakfastCards1
                 DropDownList_Revise_Month.Items.Add(value.ToString());
                 DropDownList_Inquiry_Month.Items.Add(value.ToString());
                 DropDownList_Json_Month.Items.Add(value.ToString());
+                DropDownList_ActualBreakfast_AddMonth.Items.Add(value.ToString());
+                DropDownList_ActualBreakfast_InquiryMonth.Items.Add(value.ToString());
             }
 
             //GroupName
@@ -84,6 +88,8 @@ namespace BreakfastCards1
                 DropDownList_Delete_GroupName.Items.Add(value.ToString());
                 DropDownList_Revise_GroupName.Items.Add(value.ToString());
                 DropDownList_Inquiry_GroupName.Items.Add(value.ToString());
+                DropDownList_ActualBreakfast_AddGroupName.Items.Add(value.ToString());
+                DropDownList_ActualBreakfast_InquiryGroupName.Items.Add(value.ToString());
             }
             //string url = @"http://timor.tech/api/holiday/info/2022-09-01";
             //WebRequest request = WebRequest.Create(url);
@@ -139,10 +145,17 @@ namespace BreakfastCards1
             GroupName_Manager.Add("SharePoint", "Cindy Ge");
             a.Manager = GroupName_Manager[DropDownList_Add_GroupName.Text];
 
-            BreakfastCardsEntities db = new BreakfastCardsEntities();
-            db.Table_FourName.Add(a);
-            db.SaveChanges();
-            Response.Redirect(Request.Url.ToString());
+            try
+            {
+                BreakfastCardsEntities db = new BreakfastCardsEntities();
+                db.Table_FourName.Add(a); 
+                db.SaveChanges(); 
+                Response.Redirect(Request.Url.ToString());
+            }
+            catch(System.Data.Entity.Infrastructure.DbUpdateException)
+            {
+                Label_Json.Text = "Sorry";
+            }   
         }
 
         protected void Button_Delete_Click(object sender, EventArgs e)
@@ -174,20 +187,19 @@ namespace BreakfastCards1
             GroupName_Num.Add("S500_2", "08");
             GroupName_Num.Add("SharePoint", "09");
             a.ID= DropDownList_Delete_Year.Text + Month_DigitToEng[DropDownList_Delete_Month.Text] + GroupName_Num[DropDownList_Delete_GroupName.Text];
-            
-            if (a != null)
+
+            try
             {
                 db.Table_FourName.Attach(a);
                 db.Table_FourName.Remove(a);
                 db.SaveChanges();
                 Response.Redirect(Request.Url.ToString());
+
             }
-            else
-                Response.Write("Sorry！");//不行
-            
-            
-            
-            
+            catch(System.Data.Entity.Infrastructure.DbUpdateConcurrencyException)
+            {
+                Label_Json.Text = "Sorry_catch";
+            }          
         }
 
         protected void Button_Revise_Click(object sender, EventArgs e)
@@ -221,21 +233,24 @@ namespace BreakfastCards1
 
             Table_FourName a = new Table_FourName() { ID = DropDownList_Revise_Year.Text + Month_EngToDigit[DropDownList_Revise_Month.Text] + GroupName_Num[DropDownList_Revise_GroupName.Text] };
             
-            if(a!=null)
+            try
             {
                 db.Table_FourName.Attach(a);
                 a.Quantity = Convert.ToInt16(TextBox_Revise_Quantity.Text);
                 db.SaveChanges();
                 Response.Redirect(Request.Url.ToString());
             }
-            else
-                this.Response.Write("Sorry！");//不行
+            catch
+            {
+                Label_Inquiry.Text = "Sorry_Revise!";
+            }
         }
 
         protected void Button_Inquiry_Click(object sender, EventArgs e)
         {
             BreakfastCardsEntities db = new BreakfastCardsEntities();
-            if(DropDownList_Revise_Year.Text != "Never Choose"&& DropDownList_Revise_Month.Text != "Never Choose"&& DropDownList_Inquiry_GroupName.Text != "Never Choose")
+            Label_Inquiry.Text = "";
+            if(DropDownList_Inquiry_Year.Text != "Never Choose"&& DropDownList_Inquiry_Month.Text != "Never Choose"&& DropDownList_Inquiry_GroupName.Text != "Never Choose")//OK
             {
                 string Date = DropDownList_Inquiry_Year.Text +"-"+ DropDownList_Inquiry_Month.Text;
                 string GroupName = DropDownList_Inquiry_GroupName.Text;
@@ -244,10 +259,12 @@ namespace BreakfastCards1
                               select c;
                 foreach(var client in clients)
                 {
-                    Label_Inquiry.Text= "Data:" + client.Date + "<&#9;>" + "GroupName:" + client.GroupName + "<&#9;>" + "Manager:" + client.Manager + "<br/>";
+                    Label_Inquiry.Text+= "Data:" + client.Date + "----" + "GroupName:" + client.GroupName + "----" + "Manager:" + client.Manager + "<br/>";
                 }
+                GridView_Inquiry.DataSource = clients.ToList();
+                GridView_Inquiry.DataBind();
             }
-            else if(DropDownList_Revise_Year.Text != "Never Choose" && DropDownList_Revise_Month.Text != "Never Choose")
+            else if(DropDownList_Inquiry_Year.Text != "Never Choose" && DropDownList_Inquiry_Month.Text != "Never Choose")//OK
             {
                 string Date = DropDownList_Inquiry_Year.Text + "-" + DropDownList_Inquiry_Month.Text;
                 var clients = from c in db.Table_FourName
@@ -255,34 +272,40 @@ namespace BreakfastCards1
                               select c;
                 foreach (var client in clients)
                 {
-                    Label_Inquiry.Text = "Data:" + client.Date + "<&#9;>" + "GroupName:" + client.GroupName + "<&#9;>" + "Manager:" + client.Manager + "<br/>";
+                    Label_Inquiry.Text += "Data:" + client.Date + "----" + "GroupName:" + client.GroupName + "----" + "Manager:" + client.Manager + "<br/>";
                 }
+                GridView_Inquiry.DataSource = clients.ToList();
+                GridView_Inquiry.DataBind();
             }
-            else if(DropDownList_Revise_Year.Text != "Never Choose" && DropDownList_Inquiry_GroupName.Text != "Never Choose")
+            else if(DropDownList_Inquiry_Year.Text != "Never Choose" && DropDownList_Inquiry_GroupName.Text != "Never Choose")  //OK
             {
-                string Data = DropDownList_Inquiry_Year.Text;
+                string Year = DropDownList_Inquiry_Year.Text;
                 string GroupName = DropDownList_Inquiry_GroupName.Text;
                 var clients = from c in db.Table_FourName
-                              where c.Date.StartsWith(Data) && c.GroupName == GroupName
+                              where c.Date.StartsWith(Year) && c.GroupName == GroupName
                               select c;
                 foreach (var client in clients)
                 {
-                    Label_Inquiry.Text = "Data:" + client.Date + "<&#9;>" + "GroupName:" + client.GroupName + "<&#9;>" + "Manager:" + client.Manager + "<br/>";
+                    Label_Inquiry.Text += "Data:" + client.Date + "----" + "GroupName:" + client.GroupName + "----" + "Manager:" + client.Manager + "<br/>";
                 }
+                GridView_Inquiry.DataSource = clients.ToList();
+                GridView_Inquiry.DataBind();
             }
-            else if(DropDownList_Revise_Month.Text != "Never Choose" && DropDownList_Inquiry_GroupName.Text != "Never Choose")
+            else if(DropDownList_Inquiry_Month.Text != "Never Choose" && DropDownList_Inquiry_GroupName.Text != "Never Choose")     
             {
-                string Data = DropDownList_Inquiry_Month.Text;
+                string Month = DropDownList_Inquiry_Month.Text;
                 string GroupName = DropDownList_Inquiry_GroupName.Text;
                 var clients = from c in db.Table_FourName
-                              where c.Date.StartsWith(Data) && c.GroupName == GroupName
+                              where c.Date.EndsWith(Month) && c.GroupName == GroupName
                               select c;
                 foreach (var client in clients)
                 {
-                    Label_Inquiry.Text = "Data:" + client.Date + "<&#9;>" + "GroupName:" + client.GroupName + "<&#9;>" + "Manager:" + client.Manager + "<br/>";
+                    Label_Inquiry.Text += "Data:" + client.Date + "----" + "GroupName:" + client.GroupName + "----" + "Manager:" + client.Manager + "<br/>";
                 }
+                GridView_Inquiry.DataSource= clients.ToList();
+                GridView_Inquiry.DataBind();
             }
-            else if (DropDownList_Revise_Year.Text == "Never Choose" && DropDownList_Revise_Month.Text == "Never Choose" && DropDownList_Inquiry_GroupName.Text == "Never Choose")
+            else 
             {
                 Label_Inquiry.Text = "Sorry!";//不行
             }
@@ -290,8 +313,6 @@ namespace BreakfastCards1
 
         protected void Button_Json_Click(object sender, EventArgs e)
         {
-            
-
             int year=Convert.ToInt16(DropDownList_Json_Year.Text);
 
             Dictionary<string, string> Month_EngToDigit = new Dictionary<string, string>();

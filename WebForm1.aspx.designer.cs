@@ -195,6 +195,87 @@ namespace BreakfastCards1
         protected global::System.Web.UI.WebControls.Label Label_Inquiry;
 
         /// <summary>
+        /// GridView_Inquiry 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView GridView_Inquiry;
+
+        /// <summary>
+        /// DropDownList_ActualBreakfast_AddYear 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList DropDownList_ActualBreakfast_AddYear;
+
+        /// <summary>
+        /// DropDownList_ActualBreakfast_AddMonth 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList DropDownList_ActualBreakfast_AddMonth;
+
+        /// <summary>
+        /// DropDownList_ActualBreakfast_AddGroupName 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList DropDownList_ActualBreakfast_AddGroupName;
+
+        /// <summary>
+        /// Button_Actual_Breakfast_Add 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Button_Actual_Breakfast_Add;
+
+        /// <summary>
+        /// DropDownList_ActualBreakfast_InquiryYear 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList DropDownList_ActualBreakfast_InquiryYear;
+
+        /// <summary>
+        /// DropDownList_ActualBreakfast_InquiryMonth 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList DropDownList_ActualBreakfast_InquiryMonth;
+
+        /// <summary>
+        /// DropDownList_ActualBreakfast_InquiryGroupName 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList DropDownList_ActualBreakfast_InquiryGroupName;
+
+        /// <summary>
+        /// Button_Actual_Breakfast_Inquiry 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Button_Actual_Breakfast_Inquiry;
+
+        /// <summary>
         /// DropDownList_Json_Year 控件。
         /// </summary>
         /// <remarks>
