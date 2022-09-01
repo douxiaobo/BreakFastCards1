@@ -231,6 +231,24 @@ namespace BreakfastCards1
         protected global::System.Web.UI.WebControls.DropDownList DropDownList_ActualBreakfast_AddGroupName;
 
         /// <summary>
+        /// DropDownList_ActualBreakfast_AddCards 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList DropDownList_ActualBreakfast_AddCards;
+
+        /// <summary>
+        /// CheckBoxList_ActualBreakfast_Add 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBoxList CheckBoxList_ActualBreakfast_Add;
+
+        /// <summary>
         /// Button_Actual_Breakfast_Add 控件。
         /// </summary>
         /// <remarks>

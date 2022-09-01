@@ -18,16 +18,38 @@ namespace BreakfastCards1
     {
         string ThisYear = DateTime.Now.ToString("yyyy");
         string ThisMonth = DateTime.Now.ToString("MMMM", CultureInfo.GetCultureInfo("en-US"));
-        protected async void Page_Load(object sender, EventArgs e)
+        protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
+                BindYear();
+                BindMonth();
+                BindGroupName();
+                BindActualBreakfast_AddCards();
                 GridView1.DataBind();
             }
 
+            //string url = @"http://timor.tech/api/holiday/info/2022-09-01";
+            //WebRequest request = WebRequest.Create(url);
+            //WebResponse response = request.GetResponse();
+            //Stream webstream = response.GetResponseStream();
+            //StreamReader streamReader = new StreamReader(webstream);
+            //string json = streamReader.ReadToEnd();
+            //Label_Json.Text = json;
+
+        }
+
+        protected void BindYear()
+        {
+            DropDownList_ActualBreakfast_AddYear.Items.Clear();
+            DropDownList_ActualBreakfast_InquiryYear.Items.Clear();
+            DropDownList_Add_Year.Items.Clear();
+            DropDownList_Delete_Year.Items.Clear();
+            DropDownList_Inquiry_Year.Items.Clear();
+            DropDownList_Json_Year.Items.Clear();
+            DropDownList_Revise_Year.Items.Clear();
+
             DropDownList_Inquiry_Year.Items.Add("Never Choose");
-            DropDownList_Inquiry_Month.Items.Add("Never Choose");
-            DropDownList_Inquiry_GroupName.Items.Add("Never Choose");
 
             //年份Year
             int ThisYearInt = Convert.ToInt16(ThisYear);
@@ -43,7 +65,20 @@ namespace BreakfastCards1
                 DropDownList_ActualBreakfast_AddYear.Items.Add(i.ToString());
                 DropDownList_ActualBreakfast_InquiryYear.Items.Add(i.ToString());
             }
-            
+        }
+
+        protected void BindMonth()
+        {
+            DropDownList_ActualBreakfast_AddMonth.Items.Clear();
+            DropDownList_ActualBreakfast_InquiryMonth.Items.Clear();
+            DropDownList_Add_Month.Items.Clear();
+            DropDownList_Delete_Month.Items.Clear();
+            DropDownList_Inquiry_Month.Items.Clear();
+            DropDownList_Json_Month.Items.Clear();
+            DropDownList_Revise_Month.Items.Clear();
+
+            DropDownList_Inquiry_Month.Items.Add("Never Choose");
+
             //Month月份
             Dictionary<int, string> Month_DigitToEng = new Dictionary<int, string>();
             Month_DigitToEng.Add(1, "January");
@@ -70,6 +105,19 @@ namespace BreakfastCards1
                 DropDownList_ActualBreakfast_InquiryMonth.Items.Add(value.ToString());
             }
 
+        }
+
+        protected void BindGroupName()
+        {
+            DropDownList_ActualBreakfast_AddGroupName.Items.Clear();
+            DropDownList_ActualBreakfast_InquiryGroupName.Items.Clear();
+            DropDownList_Add_GroupName.Items.Clear();
+            DropDownList_Delete_GroupName.Items.Clear();
+            DropDownList_Inquiry_GroupName.Items.Clear();
+            DropDownList_Revise_GroupName.Items.Clear();
+
+            DropDownList_Inquiry_GroupName.Items.Add("Never Choose");
+
             //GroupName
             Dictionary<int, string> GroupName_Dic = new Dictionary<int, string>();
             GroupName_Dic.Add(1, "Intune");
@@ -91,34 +139,96 @@ namespace BreakfastCards1
                 DropDownList_ActualBreakfast_AddGroupName.Items.Add(value.ToString());
                 DropDownList_ActualBreakfast_InquiryGroupName.Items.Add(value.ToString());
             }
-            //string url = @"http://timor.tech/api/holiday/info/2022-09-01";
-            //WebRequest request = WebRequest.Create(url);
-            //WebResponse response = request.GetResponse();
-            //Stream webstream = response.GetResponseStream();
-            //StreamReader streamReader = new StreamReader(webstream);
-            //string json = streamReader.ReadToEnd();
-            //Label_Json.Text = json;
+        }
+
+        protected void BindActualBreakfast_AddCards()
+        {
+            DropDownList_ActualBreakfast_AddCards.Items.Clear();
+
+            Dictionary<string, string> GroupName_Num = new Dictionary<string, string>();
+            GroupName_Num.Add("Intune", "01");
+            GroupName_Num.Add("Office", "02");
+            GroupName_Num.Add("SCCM", "03");
+            GroupName_Num.Add("Teams", "04");
+            GroupName_Num.Add("POD1", "05");
+            GroupName_Num.Add("POD2", "06");
+            GroupName_Num.Add("S500_1", "07");
+            GroupName_Num.Add("S500_2", "08");
+            GroupName_Num.Add("SharePoint", "09");
+
+            Dictionary<string, string> Month_EngToDigit = new Dictionary<string, string>();
+            Month_EngToDigit.Add("January", "01");
+            Month_EngToDigit.Add("February", "02");
+            Month_EngToDigit.Add("March", "03");
+            Month_EngToDigit.Add("April", "04");
+            Month_EngToDigit.Add("May", "05");
+            Month_EngToDigit.Add("June", "06");
+            Month_EngToDigit.Add("July", "07");
+            Month_EngToDigit.Add("August", "08");
+            Month_EngToDigit.Add("September", "09");
+            Month_EngToDigit.Add("October", "10");
+            Month_EngToDigit.Add("November", "11");
+            Month_EngToDigit.Add("December", "12");
+
+            string ID = DropDownList_ActualBreakfast_AddYear.SelectedValue + Month_EngToDigit[DropDownList_ActualBreakfast_AddMonth.SelectedValue] + GroupName_Num[DropDownList_ActualBreakfast_AddGroupName.SelectedValue];
+
+            // HardCode for testing... 
+            //ID = "20220801";
+
+            BreakfastCardsEntities db = new BreakfastCardsEntities();
+            var client = db.Table_FourName.FirstOrDefault(c => c.ID == ID);
+
+            Dictionary<int, string> ActualBreakfast_Add_DigitToEng = new Dictionary<int, string>();
+            ActualBreakfast_Add_DigitToEng.Add(1, "First");
+            ActualBreakfast_Add_DigitToEng.Add(2, "Second");
+            ActualBreakfast_Add_DigitToEng.Add(3, "Third");
+            ActualBreakfast_Add_DigitToEng.Add(4, "Fourth");
+            ActualBreakfast_Add_DigitToEng.Add(5, "Fifth");
+            ActualBreakfast_Add_DigitToEng.Add(6, "Sixth");
+            ActualBreakfast_Add_DigitToEng.Add(7, "Seventh");
+            ActualBreakfast_Add_DigitToEng.Add(8, "Eighth");
+            ActualBreakfast_Add_DigitToEng.Add(9, "Ninth");
+            ActualBreakfast_Add_DigitToEng.Add(10, "Tenth");
+            ActualBreakfast_Add_DigitToEng.Add(11, "Eleventh");
+            ActualBreakfast_Add_DigitToEng.Add(12, "Twelfth");
+            ActualBreakfast_Add_DigitToEng.Add(13, "Thirteenth");
+            ActualBreakfast_Add_DigitToEng.Add(14, "Fourteenth");
+            ActualBreakfast_Add_DigitToEng.Add(15, "Fifteenth");
+
+            try
+            {
+                int a = Convert.ToInt16(client.Quantity.Value);
+                for (int i = 1; i <= a; i++)
+                {
+                    DropDownList_ActualBreakfast_AddCards.Items.Add(ActualBreakfast_Add_DigitToEng[i]);
+                }
+            }
+            catch (System.NullReferenceException)
+            {
+                Label_Inquiry.Text = "Sorry_ActualBreakfast_AddCards!";
+            }
 
         }
+
         protected void Button_Add_Comfirm_Click(object sender, EventArgs e)
         {
-            Table_FourName a = new Table_FourName();            
-            a.Date= DropDownList_Add_Year.Text +"-" +DropDownList_Add_Month.Text;
+            Table_FourName a = new Table_FourName();
+            a.Date = DropDownList_Add_Year.Text + "-" + DropDownList_Add_Month.Text;
             a.GroupName = DropDownList_Add_GroupName.Text;
             a.Quantity = Convert.ToInt16(TextBox_Add_Quantity.Text);
 
             Dictionary<string, string> Month_DigitToEng = new Dictionary<string, string>();
             Month_DigitToEng.Add("January", "01");
             Month_DigitToEng.Add("February", "02");
-            Month_DigitToEng.Add( "March", "03");
-            Month_DigitToEng.Add( "April", "04");
-            Month_DigitToEng.Add( "May", "05");
-            Month_DigitToEng.Add( "June", "06");
-            Month_DigitToEng.Add( "July", "07");
-            Month_DigitToEng.Add( "August", "08");
-            Month_DigitToEng.Add( "September", "09");
-            Month_DigitToEng.Add( "October", "10");
-            Month_DigitToEng.Add( "November", "11");
+            Month_DigitToEng.Add("March", "03");
+            Month_DigitToEng.Add("April", "04");
+            Month_DigitToEng.Add("May", "05");
+            Month_DigitToEng.Add("June", "06");
+            Month_DigitToEng.Add("July", "07");
+            Month_DigitToEng.Add("August", "08");
+            Month_DigitToEng.Add("September", "09");
+            Month_DigitToEng.Add("October", "10");
+            Month_DigitToEng.Add("November", "11");
             Month_DigitToEng.Add("December", "12");
 
             Dictionary<string, string> GroupName_Num = new Dictionary<string, string>();
@@ -126,14 +236,14 @@ namespace BreakfastCards1
             GroupName_Num.Add("Office", "02");
             GroupName_Num.Add("SCCM", "03");
             GroupName_Num.Add("Teams", "04");
-            GroupName_Num.Add("POD1","05");
+            GroupName_Num.Add("POD1", "05");
             GroupName_Num.Add("POD2", "06");
             GroupName_Num.Add("S500_1", "07");
             GroupName_Num.Add("S500_2", "08");
             GroupName_Num.Add("SharePoint", "09");
             a.ID = DropDownList_Add_Year.Text + Month_DigitToEng[DropDownList_Add_Month.Text] + GroupName_Num[DropDownList_Add_GroupName.Text];
 
-            Dictionary<string,string> GroupName_Manager = new Dictionary<string,string>();
+            Dictionary<string, string> GroupName_Manager = new Dictionary<string, string>();
             GroupName_Manager.Add("Intune", "John Huang");
             GroupName_Manager.Add("Office", "Amanda Luo");
             GroupName_Manager.Add("SCCM", "Eric Zhang");
@@ -148,14 +258,14 @@ namespace BreakfastCards1
             try
             {
                 BreakfastCardsEntities db = new BreakfastCardsEntities();
-                db.Table_FourName.Add(a); 
-                db.SaveChanges(); 
+                db.Table_FourName.Add(a);
+                db.SaveChanges();
                 Response.Redirect(Request.Url.ToString());
             }
-            catch(System.Data.Entity.Infrastructure.DbUpdateException)
+            catch (System.Data.Entity.Infrastructure.DbUpdateException)
             {
                 Label_Json.Text = "Sorry";
-            }   
+            }
         }
 
         protected void Button_Delete_Click(object sender, EventArgs e)
@@ -186,7 +296,7 @@ namespace BreakfastCards1
             GroupName_Num.Add("S500_1", "07");
             GroupName_Num.Add("S500_2", "08");
             GroupName_Num.Add("SharePoint", "09");
-            a.ID= DropDownList_Delete_Year.Text + Month_DigitToEng[DropDownList_Delete_Month.Text] + GroupName_Num[DropDownList_Delete_GroupName.Text];
+            a.ID = DropDownList_Delete_Year.Text + Month_DigitToEng[DropDownList_Delete_Month.Text] + GroupName_Num[DropDownList_Delete_GroupName.Text];
 
             try
             {
@@ -196,15 +306,15 @@ namespace BreakfastCards1
                 Response.Redirect(Request.Url.ToString());
 
             }
-            catch(System.Data.Entity.Infrastructure.DbUpdateConcurrencyException)
+            catch (System.Data.Entity.Infrastructure.DbUpdateConcurrencyException)
             {
                 Label_Json.Text = "Sorry_catch";
-            }          
+            }
         }
 
         protected void Button_Revise_Click(object sender, EventArgs e)
         {
-            BreakfastCardsEntities db=new BreakfastCardsEntities();
+            BreakfastCardsEntities db = new BreakfastCardsEntities();
 
             Dictionary<string, string> Month_EngToDigit = new Dictionary<string, string>();
             Month_EngToDigit.Add("January", "01");
@@ -232,7 +342,7 @@ namespace BreakfastCards1
             GroupName_Num.Add("SharePoint", "09");
 
             Table_FourName a = new Table_FourName() { ID = DropDownList_Revise_Year.Text + Month_EngToDigit[DropDownList_Revise_Month.Text] + GroupName_Num[DropDownList_Revise_GroupName.Text] };
-            
+
             try
             {
                 db.Table_FourName.Attach(a);
@@ -250,21 +360,21 @@ namespace BreakfastCards1
         {
             BreakfastCardsEntities db = new BreakfastCardsEntities();
             Label_Inquiry.Text = "";
-            if(DropDownList_Inquiry_Year.Text != "Never Choose"&& DropDownList_Inquiry_Month.Text != "Never Choose"&& DropDownList_Inquiry_GroupName.Text != "Never Choose")//OK
+            if (DropDownList_Inquiry_Year.Text != "Never Choose" && DropDownList_Inquiry_Month.Text != "Never Choose" && DropDownList_Inquiry_GroupName.Text != "Never Choose")//OK
             {
-                string Date = DropDownList_Inquiry_Year.Text +"-"+ DropDownList_Inquiry_Month.Text;
+                string Date = DropDownList_Inquiry_Year.Text + "-" + DropDownList_Inquiry_Month.Text;
                 string GroupName = DropDownList_Inquiry_GroupName.Text;
                 var clients = from c in db.Table_FourName
                               where c.Date == Date && c.GroupName == GroupName
                               select c;
-                foreach(var client in clients)
+                foreach (var client in clients)
                 {
-                    Label_Inquiry.Text+= "Data:" + client.Date + "----" + "GroupName:" + client.GroupName + "----" + "Manager:" + client.Manager + "<br/>";
+                    Label_Inquiry.Text += "Data:" + client.Date + "----" + "GroupName:" + client.GroupName + "----" + "Manager:" + client.Manager + "<br/>";
                 }
                 GridView_Inquiry.DataSource = clients.ToList();
                 GridView_Inquiry.DataBind();
             }
-            else if(DropDownList_Inquiry_Year.Text != "Never Choose" && DropDownList_Inquiry_Month.Text != "Never Choose")//OK
+            else if (DropDownList_Inquiry_Year.Text != "Never Choose" && DropDownList_Inquiry_Month.Text != "Never Choose")//OK
             {
                 string Date = DropDownList_Inquiry_Year.Text + "-" + DropDownList_Inquiry_Month.Text;
                 var clients = from c in db.Table_FourName
@@ -277,7 +387,7 @@ namespace BreakfastCards1
                 GridView_Inquiry.DataSource = clients.ToList();
                 GridView_Inquiry.DataBind();
             }
-            else if(DropDownList_Inquiry_Year.Text != "Never Choose" && DropDownList_Inquiry_GroupName.Text != "Never Choose")  //OK
+            else if (DropDownList_Inquiry_Year.Text != "Never Choose" && DropDownList_Inquiry_GroupName.Text != "Never Choose")  //OK
             {
                 string Year = DropDownList_Inquiry_Year.Text;
                 string GroupName = DropDownList_Inquiry_GroupName.Text;
@@ -291,7 +401,7 @@ namespace BreakfastCards1
                 GridView_Inquiry.DataSource = clients.ToList();
                 GridView_Inquiry.DataBind();
             }
-            else if(DropDownList_Inquiry_Month.Text != "Never Choose" && DropDownList_Inquiry_GroupName.Text != "Never Choose")     
+            else if (DropDownList_Inquiry_Month.Text != "Never Choose" && DropDownList_Inquiry_GroupName.Text != "Never Choose")
             {
                 string Month = DropDownList_Inquiry_Month.Text;
                 string GroupName = DropDownList_Inquiry_GroupName.Text;
@@ -302,10 +412,10 @@ namespace BreakfastCards1
                 {
                     Label_Inquiry.Text += "Data:" + client.Date + "----" + "GroupName:" + client.GroupName + "----" + "Manager:" + client.Manager + "<br/>";
                 }
-                GridView_Inquiry.DataSource= clients.ToList();
+                GridView_Inquiry.DataSource = clients.ToList();
                 GridView_Inquiry.DataBind();
             }
-            else 
+            else
             {
                 Label_Inquiry.Text = "Sorry!";//不行
             }
@@ -313,7 +423,7 @@ namespace BreakfastCards1
 
         protected void Button_Json_Click(object sender, EventArgs e)
         {
-            int year=Convert.ToInt16(DropDownList_Json_Year.Text);
+            int year = Convert.ToInt16(DropDownList_Json_Year.Text);
 
             Dictionary<string, string> Month_EngToDigit = new Dictionary<string, string>();
             Month_EngToDigit.Add("January", "01");
@@ -332,23 +442,23 @@ namespace BreakfastCards1
             int month = Convert.ToInt16(Month_EngToDigit[DropDownList_Json_Month.Text]);
 
             int days = DateTime.DaysInMonth(year, month);
-            Label_Json.Text="The Days of Month:" +days + "<br/>";
-            DateTime dt = Convert.ToDateTime(DropDownList_Json_Year.Text + "-" + DropDownList_Json_Month.Text+"-"+01.ToString());
+            Label_Json.Text = "The Days of Month:" + days + "<br/>";
+            DateTime dt = Convert.ToDateTime(DropDownList_Json_Year.Text + "-" + DropDownList_Json_Month.Text + "-" + 01.ToString());
             int workDays = 0;
-            for(int i=1;i<=days;i++)
+            for (int i = 1; i <= days; i++)
             {
-                if(dt.DayOfWeek!=DayOfWeek.Saturday&&dt.DayOfWeek!=DayOfWeek.Sunday)
+                if (dt.DayOfWeek != DayOfWeek.Saturday && dt.DayOfWeek != DayOfWeek.Sunday)
                 {
                     string url = @"http://timor.tech/api/holiday/info/";
-                    url += year.ToString() + "-" + month.ToString() + "-"+i.ToString();
+                    url += year.ToString() + "-" + month.ToString() + "-" + i.ToString();
                     WebRequest request = WebRequest.Create(url);
                     WebResponse response = request.GetResponse();
                     Stream webstream = response.GetResponseStream();
                     StreamReader streamReader = new StreamReader(webstream);
                     string json = streamReader.ReadToEnd();
-                    JavaScriptSerializer json1=new JavaScriptSerializer();
+                    JavaScriptSerializer json1 = new JavaScriptSerializer();
                     Dictionary<string, object> DicText = (Dictionary<string, object>)json1.DeserializeObject(json);
-                    if (DicText["holiday"]==null)
+                    if (DicText["holiday"] == null)
                         workDays++;
                 }
                 dt = dt.AddDays(1);
@@ -360,5 +470,7 @@ namespace BreakfastCards1
             //"type":{"type":0,"name":"周四","week":4},
             //"holiday":null}
         }
+
+        
     }
 }
