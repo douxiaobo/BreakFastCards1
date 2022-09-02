@@ -26,17 +26,18 @@ namespace BreakfastCards1
                 BindMonth();
                 BindGroupName();
                 BindActualBreakfast_AddCards();
+                BindActualBreakfast_Add_CheckboxList();
                 GridView1.DataBind();
             }
-
-            //string url = @"http://timor.tech/api/holiday/info/2022-09-01";
-            //WebRequest request = WebRequest.Create(url);
-            //WebResponse response = request.GetResponse();
-            //Stream webstream = response.GetResponseStream();
-            //StreamReader streamReader = new StreamReader(webstream);
-            //string json = streamReader.ReadToEnd();
-            //Label_Json.Text = json;
-
+            /*
+            string url = @"http://timor.tech/api/holiday/info/2022-09-01";
+            WebRequest request = WebRequest.Create(url);
+            WebResponse response = request.GetResponse();
+            Stream webstream = response.GetResponseStream();
+            StreamReader streamReader = new StreamReader(webstream);
+            string json = streamReader.ReadToEnd();
+            Label_Json.Text = json;
+            */
         }
 
         protected void BindYear()
@@ -93,6 +94,30 @@ namespace BreakfastCards1
             Month_DigitToEng.Add(10, "October");
             Month_DigitToEng.Add(11, "November");
             Month_DigitToEng.Add(12, "December");
+
+            string ThisMonth = DateTime.Now.ToString("MM");
+            for(int i=Convert.ToInt16(ThisMonth)-1;i<=12;i++)
+            {
+                DropDownList_ActualBreakfast_AddMonth.Items.Add(Month_DigitToEng[i]);
+                DropDownList_ActualBreakfast_InquiryMonth.Items.Add(Month_DigitToEng[i]);
+                DropDownList_Add_Month.Items.Add(Month_DigitToEng[i]);
+                DropDownList_Delete_Month.Items.Add(Month_DigitToEng[i]);
+                DropDownList_Inquiry_Month.Items.Add(Month_DigitToEng[i]);
+                DropDownList_Json_Month.Items.Add(Month_DigitToEng[i]);
+                DropDownList_Revise_Month.Items.Add(Month_DigitToEng[i]);
+            }
+            for(int i=1;i<Convert.ToInt16(ThisMonth)-1;i++)
+            {
+                DropDownList_ActualBreakfast_AddMonth.Items.Add(Month_DigitToEng[i]);
+                DropDownList_ActualBreakfast_InquiryMonth.Items.Add(Month_DigitToEng[i]);
+                DropDownList_Add_Month.Items.Add(Month_DigitToEng[i]);
+                DropDownList_Delete_Month.Items.Add(Month_DigitToEng[i]);
+                DropDownList_Inquiry_Month.Items.Add(Month_DigitToEng[i]);
+                DropDownList_Json_Month.Items.Add(Month_DigitToEng[i]);
+                DropDownList_Revise_Month.Items.Add(Month_DigitToEng[i]);
+            }
+
+            /*
             Dictionary<int, string>.ValueCollection MonthCol = Month_DigitToEng.Values;
             foreach (string value in MonthCol)
             {
@@ -104,6 +129,7 @@ namespace BreakfastCards1
                 DropDownList_ActualBreakfast_AddMonth.Items.Add(value.ToString());
                 DropDownList_ActualBreakfast_InquiryMonth.Items.Add(value.ToString());
             }
+            */
 
         }
 
@@ -208,6 +234,67 @@ namespace BreakfastCards1
                 Label_Inquiry.Text = "Sorry_ActualBreakfast_AddCards!";
             }
 
+        }
+
+        protected void BindActualBreakfast_Add_CheckboxList()
+        {
+            CheckBoxList_ActualBreakfast_Add.Items.Clear();
+            int year = Convert.ToInt16(DropDownList_ActualBreakfast_AddYear.Text);
+            Dictionary<string, string> Month_EngToDigit = new Dictionary<string, string>();
+            Month_EngToDigit.Add("January", "01");
+            Month_EngToDigit.Add("February", "02");
+            Month_EngToDigit.Add("March", "03");
+            Month_EngToDigit.Add("April", "04");
+            Month_EngToDigit.Add("May", "05");
+            Month_EngToDigit.Add("June", "06");
+            Month_EngToDigit.Add("July", "07");
+            Month_EngToDigit.Add("August", "08");
+            Month_EngToDigit.Add("September", "09");
+            Month_EngToDigit.Add("October", "10");
+            Month_EngToDigit.Add("November", "11");
+            Month_EngToDigit.Add("December", "12");
+            int month = Convert.ToInt16(Month_EngToDigit[DropDownList_ActualBreakfast_AddMonth.Text]);
+
+            int days = DateTime.DaysInMonth(year, month);
+
+            DateTime dt = Convert.ToDateTime(DropDownList_ActualBreakfast_AddYear.Text + "-" + DropDownList_ActualBreakfast_AddMonth.Text + "-" + 01.ToString());
+
+            for (int i = 1; i <= days; i++)
+            {
+                //我遇到一个棘手的问题，在CheckBoxList控件里，遇到周五之后，都要换行，不知道怎么解决。间隔距离，不知道怎么解决。
+                if (dt.DayOfWeek != DayOfWeek.Saturday && dt.DayOfWeek != DayOfWeek.Sunday) 
+                {
+                    /*
+                    if ((i == 1 && dt.DayOfWeek == DayOfWeek.Friday) || (i == 4 && dt.DayOfWeek == DayOfWeek.Monday))
+                        CheckBoxList_ActualBreakfast_Add.RepeatColumns = 1;
+                    else if ((i == 1 && dt.DayOfWeek == DayOfWeek.Thursday) || (i == 2 && dt.DayOfWeek == DayOfWeek.Friday) || (i == 5 && dt.DayOfWeek == DayOfWeek.Monday))
+                        CheckBoxList_ActualBreakfast_Add.RepeatColumns = 2;
+                    else if (i == 1 && dt.DayOfWeek == DayOfWeek.Wednesday)
+                        CheckBoxList_ActualBreakfast_Add.RepeatColumns = 3;
+                    else if (i == 1 && dt.DayOfWeek == DayOfWeek.Tuesday)
+                        CheckBoxList_ActualBreakfast_Add.RepeatColumns = 4;
+                    else if ((i == 1 && dt.DayOfWeek == DayOfWeek.Monday) || (i == 4 && dt.DayOfWeek == DayOfWeek.Thursday))
+                        CheckBoxList_ActualBreakfast_Add.RepeatColumns = 5;
+                    else if(i>4)
+                        CheckBoxList_ActualBreakfast_Add.RepeatColumns = 5;
+                    */
+
+                    string url = @"http://timor.tech/api/holiday/info/";
+                    url += year.ToString() + "-" + month.ToString() + "-" + i.ToString();
+                    WebRequest request = WebRequest.Create(url);
+                    WebResponse response = request.GetResponse();
+                    Stream webstream = response.GetResponseStream();
+                    StreamReader streamReader = new StreamReader(webstream);
+                    string json = streamReader.ReadToEnd();
+                    JavaScriptSerializer json1 = new JavaScriptSerializer();
+                    Dictionary<string, object> DicText = (Dictionary<string, object>)json1.DeserializeObject(json);
+                    if (DicText["holiday"] == null)
+                        CheckBoxList_ActualBreakfast_Add.Items.Add(DropDownList_ActualBreakfast_AddYear.Text + "-" + Month_EngToDigit[DropDownList_ActualBreakfast_AddMonth.Text] + "-" + i.ToString("00"));
+                    
+                }
+                dt = dt.AddDays(1);
+            }
+            //考虑中，打算创建数据库,ID,Year,Month,GroupName,Card,Date,Breakfast(boolean) 
         }
 
         protected void Button_Add_Comfirm_Click(object sender, EventArgs e)
@@ -438,7 +525,6 @@ namespace BreakfastCards1
             Month_EngToDigit.Add("October", "10");
             Month_EngToDigit.Add("November", "11");
             Month_EngToDigit.Add("December", "12");
-
             int month = Convert.ToInt16(Month_EngToDigit[DropDownList_Json_Month.Text]);
 
             int days = DateTime.DaysInMonth(year, month);
@@ -471,6 +557,32 @@ namespace BreakfastCards1
             //"holiday":null}
         }
 
-        
+        protected void DropDownList_ActualBreakfast_AddYear_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            BindActualBreakfast_AddCards();
+            BindActualBreakfast_Add_CheckboxList();
+        }
+
+        protected void DropDownList_ActualBreakfast_AddMonth_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            BindActualBreakfast_AddCards();
+            BindActualBreakfast_Add_CheckboxList();
+        }
+
+        protected void DropDownList_ActualBreakfast_AddGroupName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            BindActualBreakfast_AddCards();
+            BindActualBreakfast_Add_CheckboxList();
+        }
+
+        protected void CheckBoxList_ActualBreakfast_Add_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        protected void DropDownList_ActualBreakfast_AddCards_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            BindActualBreakfast_Add_CheckboxList();
+        }
     }
 }

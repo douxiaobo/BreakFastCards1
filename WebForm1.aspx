@@ -57,10 +57,11 @@
         <br />
         <div>
             Add in Actual Breakfast:增加早餐卡数量<br />
-            Year:<asp:DropDownList ID="DropDownList_ActualBreakfast_AddYear" runat="server" AutoPostBack="True"></asp:DropDownList>
-            Month:<asp:DropDownList ID="DropDownList_ActualBreakfast_AddMonth" runat="server" AutoPostBack="True"></asp:DropDownList>
-            Group Name:<asp:DropDownList ID="DropDownList_ActualBreakfast_AddGroupName" runat="server" AutoPostBack="True"></asp:DropDownList>
-            The <asp:DropDownList ID="DropDownList_ActualBreakfast_AddCards" runat="server" ></asp:DropDownList> card<asp:CheckBoxList ID="CheckBoxList_ActualBreakfast_Add" runat="server">
+            Year:<asp:DropDownList ID="DropDownList_ActualBreakfast_AddYear" runat="server" AutoPostBack="True" OnSelectedIndexChanged="DropDownList_ActualBreakfast_AddYear_SelectedIndexChanged"></asp:DropDownList>
+            Month:<asp:DropDownList ID="DropDownList_ActualBreakfast_AddMonth" runat="server" AutoPostBack="True" OnSelectedIndexChanged="DropDownList_ActualBreakfast_AddMonth_SelectedIndexChanged"></asp:DropDownList>
+            Group Name:<asp:DropDownList ID="DropDownList_ActualBreakfast_AddGroupName" runat="server" AutoPostBack="True" OnSelectedIndexChanged="DropDownList_ActualBreakfast_AddGroupName_SelectedIndexChanged"></asp:DropDownList>
+            The <asp:DropDownList ID="DropDownList_ActualBreakfast_AddCards" runat="server" OnSelectedIndexChanged="DropDownList_ActualBreakfast_AddCards_SelectedIndexChanged"  ></asp:DropDownList> card <br />
+            <asp:CheckBoxList ID="CheckBoxList_ActualBreakfast_Add" runat="server"  OnSelectedIndexChanged="CheckBoxList_ActualBreakfast_Add_SelectedIndexChanged" RepeatDirection="Horizontal" RepeatLayout="Flow">
             </asp:CheckBoxList>
             <asp:Button ID="Button_Actual_Breakfast_Add" runat="server" Text="Add"></asp:Button>
         &nbsp;
