@@ -4,8 +4,10 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="7f2b2cab00d14c3e831ec60acb9fc71a" Name="Diagram1">
-        <EntityTypeShape EntityType="BreakfastCardsModel.Table_FourName" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+      <Diagram DiagramId="3ec3c356a10841938f707052c962a989" Name="Diagram1">
+        <EntityTypeShape EntityType="BreakfastCardsModel.Table_ActualQuantity" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BreakfastCardsModel.Table_BreakfastBoolean" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BreakfastCardsModel.Table_FourName" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

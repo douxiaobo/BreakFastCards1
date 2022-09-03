@@ -130,7 +130,6 @@ namespace BreakfastCards1
                 DropDownList_ActualBreakfast_InquiryMonth.Items.Add(value.ToString());
             }
             */
-
         }
 
         protected void BindGroupName()
@@ -166,37 +165,12 @@ namespace BreakfastCards1
                 DropDownList_ActualBreakfast_InquiryGroupName.Items.Add(value.ToString());
             }
         }
-
+        
         protected void BindActualBreakfast_AddCards()
         {
             DropDownList_ActualBreakfast_AddCards.Items.Clear();
 
-            Dictionary<string, string> GroupName_Num = new Dictionary<string, string>();
-            GroupName_Num.Add("Intune", "01");
-            GroupName_Num.Add("Office", "02");
-            GroupName_Num.Add("SCCM", "03");
-            GroupName_Num.Add("Teams", "04");
-            GroupName_Num.Add("POD1", "05");
-            GroupName_Num.Add("POD2", "06");
-            GroupName_Num.Add("S500_1", "07");
-            GroupName_Num.Add("S500_2", "08");
-            GroupName_Num.Add("SharePoint", "09");
-
-            Dictionary<string, string> Month_EngToDigit = new Dictionary<string, string>();
-            Month_EngToDigit.Add("January", "01");
-            Month_EngToDigit.Add("February", "02");
-            Month_EngToDigit.Add("March", "03");
-            Month_EngToDigit.Add("April", "04");
-            Month_EngToDigit.Add("May", "05");
-            Month_EngToDigit.Add("June", "06");
-            Month_EngToDigit.Add("July", "07");
-            Month_EngToDigit.Add("August", "08");
-            Month_EngToDigit.Add("September", "09");
-            Month_EngToDigit.Add("October", "10");
-            Month_EngToDigit.Add("November", "11");
-            Month_EngToDigit.Add("December", "12");
-
-            string ID = DropDownList_ActualBreakfast_AddYear.SelectedValue + Month_EngToDigit[DropDownList_ActualBreakfast_AddMonth.SelectedValue] + GroupName_Num[DropDownList_ActualBreakfast_AddGroupName.SelectedValue];
+            string ID = DropDownList_ActualBreakfast_AddYear.SelectedValue + Month_EngToDigit(DropDownList_ActualBreakfast_AddMonth.SelectedValue) + GroupName_Num(DropDownList_ActualBreakfast_AddGroupName.SelectedValue);
 
             // HardCode for testing... 
             //ID = "20220801";
@@ -240,20 +214,8 @@ namespace BreakfastCards1
         {
             CheckBoxList_ActualBreakfast_Add.Items.Clear();
             int year = Convert.ToInt16(DropDownList_ActualBreakfast_AddYear.Text);
-            Dictionary<string, string> Month_EngToDigit = new Dictionary<string, string>();
-            Month_EngToDigit.Add("January", "01");
-            Month_EngToDigit.Add("February", "02");
-            Month_EngToDigit.Add("March", "03");
-            Month_EngToDigit.Add("April", "04");
-            Month_EngToDigit.Add("May", "05");
-            Month_EngToDigit.Add("June", "06");
-            Month_EngToDigit.Add("July", "07");
-            Month_EngToDigit.Add("August", "08");
-            Month_EngToDigit.Add("September", "09");
-            Month_EngToDigit.Add("October", "10");
-            Month_EngToDigit.Add("November", "11");
-            Month_EngToDigit.Add("December", "12");
-            int month = Convert.ToInt16(Month_EngToDigit[DropDownList_ActualBreakfast_AddMonth.Text]);
+
+            int month = Convert.ToInt16(Month_EngToDigit(DropDownList_ActualBreakfast_AddMonth.Text));
 
             int days = DateTime.DaysInMonth(year, month);
 
@@ -289,7 +251,7 @@ namespace BreakfastCards1
                     JavaScriptSerializer json1 = new JavaScriptSerializer();
                     Dictionary<string, object> DicText = (Dictionary<string, object>)json1.DeserializeObject(json);
                     if (DicText["holiday"] == null)
-                        CheckBoxList_ActualBreakfast_Add.Items.Add(DropDownList_ActualBreakfast_AddYear.Text + "-" + Month_EngToDigit[DropDownList_ActualBreakfast_AddMonth.Text] + "-" + i.ToString("00"));
+                        CheckBoxList_ActualBreakfast_Add.Items.Add(DropDownList_ActualBreakfast_AddYear.Text + "-" + Month_EngToDigit(DropDownList_ActualBreakfast_AddMonth.Text) + "-" + i.ToString("00"));
                     
                 }
                 dt = dt.AddDays(1);
@@ -304,31 +266,8 @@ namespace BreakfastCards1
             a.GroupName = DropDownList_Add_GroupName.Text;
             a.Quantity = Convert.ToInt16(TextBox_Add_Quantity.Text);
 
-            Dictionary<string, string> Month_DigitToEng = new Dictionary<string, string>();
-            Month_DigitToEng.Add("January", "01");
-            Month_DigitToEng.Add("February", "02");
-            Month_DigitToEng.Add("March", "03");
-            Month_DigitToEng.Add("April", "04");
-            Month_DigitToEng.Add("May", "05");
-            Month_DigitToEng.Add("June", "06");
-            Month_DigitToEng.Add("July", "07");
-            Month_DigitToEng.Add("August", "08");
-            Month_DigitToEng.Add("September", "09");
-            Month_DigitToEng.Add("October", "10");
-            Month_DigitToEng.Add("November", "11");
-            Month_DigitToEng.Add("December", "12");
-
-            Dictionary<string, string> GroupName_Num = new Dictionary<string, string>();
-            GroupName_Num.Add("Intune", "01");
-            GroupName_Num.Add("Office", "02");
-            GroupName_Num.Add("SCCM", "03");
-            GroupName_Num.Add("Teams", "04");
-            GroupName_Num.Add("POD1", "05");
-            GroupName_Num.Add("POD2", "06");
-            GroupName_Num.Add("S500_1", "07");
-            GroupName_Num.Add("S500_2", "08");
-            GroupName_Num.Add("SharePoint", "09");
-            a.ID = DropDownList_Add_Year.Text + Month_DigitToEng[DropDownList_Add_Month.Text] + GroupName_Num[DropDownList_Add_GroupName.Text];
+            //在Table_FourName里，ID的规则，顺序分别：4位是年份，2位是月份，2位是团队代号。
+            a.ID = DropDownList_Add_Year.Text + Month_EngToDigit(DropDownList_Add_Month.Text) + GroupName_Num(DropDownList_Add_GroupName.Text);
 
             Dictionary<string, string> GroupName_Manager = new Dictionary<string, string>();
             GroupName_Manager.Add("Intune", "John Huang");
@@ -359,31 +298,8 @@ namespace BreakfastCards1
         {
             BreakfastCardsEntities db = new BreakfastCardsEntities();
             Table_FourName a = new Table_FourName();
-            Dictionary<string, string> Month_DigitToEng = new Dictionary<string, string>();
-            Month_DigitToEng.Add("January", "01");
-            Month_DigitToEng.Add("February", "02");
-            Month_DigitToEng.Add("March", "03");
-            Month_DigitToEng.Add("April", "04");
-            Month_DigitToEng.Add("May", "05");
-            Month_DigitToEng.Add("June", "06");
-            Month_DigitToEng.Add("July", "07");
-            Month_DigitToEng.Add("August", "08");
-            Month_DigitToEng.Add("September", "09");
-            Month_DigitToEng.Add("October", "10");
-            Month_DigitToEng.Add("November", "11");
-            Month_DigitToEng.Add("December", "12");
 
-            Dictionary<string, string> GroupName_Num = new Dictionary<string, string>();
-            GroupName_Num.Add("Intune", "01");
-            GroupName_Num.Add("Office", "02");
-            GroupName_Num.Add("SCCM", "03");
-            GroupName_Num.Add("Teams", "04");
-            GroupName_Num.Add("POD1", "05");
-            GroupName_Num.Add("POD2", "06");
-            GroupName_Num.Add("S500_1", "07");
-            GroupName_Num.Add("S500_2", "08");
-            GroupName_Num.Add("SharePoint", "09");
-            a.ID = DropDownList_Delete_Year.Text + Month_DigitToEng[DropDownList_Delete_Month.Text] + GroupName_Num[DropDownList_Delete_GroupName.Text];
+            a.ID = DropDownList_Delete_Year.Text + Month_EngToDigit(DropDownList_Delete_Month.Text) + GroupName_Num(DropDownList_Delete_GroupName.Text);
 
             try
             {
@@ -399,24 +315,8 @@ namespace BreakfastCards1
             }
         }
 
-        protected void Button_Revise_Click(object sender, EventArgs e)
+        protected string GroupName_Num(string groupname)
         {
-            BreakfastCardsEntities db = new BreakfastCardsEntities();
-
-            Dictionary<string, string> Month_EngToDigit = new Dictionary<string, string>();
-            Month_EngToDigit.Add("January", "01");
-            Month_EngToDigit.Add("February", "02");
-            Month_EngToDigit.Add("March", "03");
-            Month_EngToDigit.Add("April", "04");
-            Month_EngToDigit.Add("May", "05");
-            Month_EngToDigit.Add("June", "06");
-            Month_EngToDigit.Add("July", "07");
-            Month_EngToDigit.Add("August", "08");
-            Month_EngToDigit.Add("September", "09");
-            Month_EngToDigit.Add("October", "10");
-            Month_EngToDigit.Add("November", "11");
-            Month_EngToDigit.Add("December", "12");
-
             Dictionary<string, string> GroupName_Num = new Dictionary<string, string>();
             GroupName_Num.Add("Intune", "01");
             GroupName_Num.Add("Office", "02");
@@ -427,8 +327,14 @@ namespace BreakfastCards1
             GroupName_Num.Add("S500_1", "07");
             GroupName_Num.Add("S500_2", "08");
             GroupName_Num.Add("SharePoint", "09");
+            return GroupName_Num[groupname];
+        }
 
-            Table_FourName a = new Table_FourName() { ID = DropDownList_Revise_Year.Text + Month_EngToDigit[DropDownList_Revise_Month.Text] + GroupName_Num[DropDownList_Revise_GroupName.Text] };
+        protected void Button_Revise_Click(object sender, EventArgs e)
+        {
+            BreakfastCardsEntities db = new BreakfastCardsEntities();
+
+            Table_FourName a = new Table_FourName() { ID = DropDownList_Revise_Year.Text + Month_EngToDigit(DropDownList_Revise_Month.Text) + GroupName_Num(DropDownList_Revise_GroupName.Text) };
 
             try
             {
@@ -508,10 +414,8 @@ namespace BreakfastCards1
             }
         }
 
-        protected void Button_Json_Click(object sender, EventArgs e)
+        protected string Month_EngToDigit(string month)
         {
-            int year = Convert.ToInt16(DropDownList_Json_Year.Text);
-
             Dictionary<string, string> Month_EngToDigit = new Dictionary<string, string>();
             Month_EngToDigit.Add("January", "01");
             Month_EngToDigit.Add("February", "02");
@@ -525,7 +429,14 @@ namespace BreakfastCards1
             Month_EngToDigit.Add("October", "10");
             Month_EngToDigit.Add("November", "11");
             Month_EngToDigit.Add("December", "12");
-            int month = Convert.ToInt16(Month_EngToDigit[DropDownList_Json_Month.Text]);
+            return Month_EngToDigit[month];
+        }
+
+        protected void Button_Json_Click(object sender, EventArgs e)
+        {
+            int year = Convert.ToInt16(DropDownList_Json_Year.Text);
+
+            int month = Convert.ToInt16(Month_EngToDigit(DropDownList_Json_Month.Text));
 
             int days = DateTime.DaysInMonth(year, month);
             Label_Json.Text = "The Days of Month:" + days + "<br/>";
@@ -574,15 +485,82 @@ namespace BreakfastCards1
             BindActualBreakfast_AddCards();
             BindActualBreakfast_Add_CheckboxList();
         }
-
-        protected void CheckBoxList_ActualBreakfast_Add_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            
-        }
-
+        
         protected void DropDownList_ActualBreakfast_AddCards_SelectedIndexChanged(object sender, EventArgs e)
         {
-            BindActualBreakfast_Add_CheckboxList();
+            BindActualBreakfast_Add_CheckboxList();            
+        }
+
+        protected void Button_Actual_Breakfast_CheckBoxList_Add(object sender, EventArgs e)
+        {
+
+
+            BreakfastCardsEntities db = new BreakfastCardsEntities();
+
+            String year = DropDownList_ActualBreakfast_AddYear.SelectedValue;
+            String month = Month_EngToDigit(DropDownList_ActualBreakfast_AddMonth.SelectedValue);
+            String groupname=GroupName_Num(DropDownList_ActualBreakfast_AddGroupName.SelectedValue);
+            
+            Dictionary<string, string> ActualBreakfast_Add_EngToDigit = new Dictionary<string, string>();
+            ActualBreakfast_Add_EngToDigit.Add("First", "01");
+            ActualBreakfast_Add_EngToDigit.Add("Second", "02");
+            ActualBreakfast_Add_EngToDigit.Add("Third", "03");
+            ActualBreakfast_Add_EngToDigit.Add("Fourth", "04");
+            ActualBreakfast_Add_EngToDigit.Add("Fifth", "05");
+            ActualBreakfast_Add_EngToDigit.Add("Sixth", "06");
+            ActualBreakfast_Add_EngToDigit.Add("Seventh", "07");
+            ActualBreakfast_Add_EngToDigit.Add("Eighth", "08");
+            ActualBreakfast_Add_EngToDigit.Add("Ninth", "09");
+            ActualBreakfast_Add_EngToDigit.Add("Tenth", "10");
+            ActualBreakfast_Add_EngToDigit.Add("Eleventh", "11");
+            ActualBreakfast_Add_EngToDigit.Add("Twelfth", "12");
+            ActualBreakfast_Add_EngToDigit.Add("Thirteenth", "13");
+            ActualBreakfast_Add_EngToDigit.Add("Fourteenth", "14");
+            ActualBreakfast_Add_EngToDigit.Add("Fifteenth", "15");
+
+            String cards = ActualBreakfast_Add_EngToDigit[DropDownList_ActualBreakfast_AddCards.SelectedValue];
+
+            int actualquantity = 0;
+
+            Table_ActualQuantity a = new Table_ActualQuantity();            
+
+            //在Table_ActualQuantity里，ID的规则，顺序分别：4位年份，2位月份，2位团队代码，2位卡号顺序。
+            a.ID= year + month + groupname + cards;
+
+            a.Year = year;
+            a.Month = DropDownList_ActualBreakfast_AddMonth.SelectedValue;
+            a.GroupName = DropDownList_ActualBreakfast_AddGroupName.SelectedValue;
+            a.Cards = DropDownList_ActualBreakfast_AddCards.SelectedValue;
+
+            foreach (ListItem item in CheckBoxList_ActualBreakfast_Add.Items)
+            {
+                Table_BreakfastBoolean b = new Table_BreakfastBoolean();                   
+
+                //在Table_BreakfastBoolean里，ID的规则，顺序分别：4位是年份，2位是月份，2位是团队代号，2位是卡号顺序，2位是日期
+                b.ID = year + month + groupname + cards+ item.Text.Substring(8);
+                b.Year = year;
+                b.Month = DropDownList_ActualBreakfast_AddMonth.SelectedValue;
+                b.GroupName=DropDownList_ActualBreakfast_AddGroupName.SelectedValue;
+                b.Cards = DropDownList_ActualBreakfast_AddCards.SelectedValue;
+                b.Data = item.Text.Substring(8);
+                if(item.Selected)
+                {
+                    actualquantity++;
+                    b.Breakfast_Boolean = "True";
+
+                }
+                else
+                {
+                    b.Breakfast_Boolean = "False";
+                }
+                db.Table_BreakfastBoolean.Add(b);
+                db.SaveChanges();                               //失败，不知道怎么解决。
+                Response.Redirect(Request.Url.ToString());
+            }
+            a.ActualQuantity = actualquantity;
+            db.Table_ActualQuantity.Add(a);
+            db.SaveChanges();
+            Response.Redirect(Request.Url.ToString());
         }
     }
 }

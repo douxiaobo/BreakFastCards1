@@ -61,9 +61,9 @@
             Month:<asp:DropDownList ID="DropDownList_ActualBreakfast_AddMonth" runat="server" AutoPostBack="True" OnSelectedIndexChanged="DropDownList_ActualBreakfast_AddMonth_SelectedIndexChanged"></asp:DropDownList>
             Group Name:<asp:DropDownList ID="DropDownList_ActualBreakfast_AddGroupName" runat="server" AutoPostBack="True" OnSelectedIndexChanged="DropDownList_ActualBreakfast_AddGroupName_SelectedIndexChanged"></asp:DropDownList>
             The <asp:DropDownList ID="DropDownList_ActualBreakfast_AddCards" runat="server" OnSelectedIndexChanged="DropDownList_ActualBreakfast_AddCards_SelectedIndexChanged"  ></asp:DropDownList> card <br />
-            <asp:CheckBoxList ID="CheckBoxList_ActualBreakfast_Add" runat="server"  OnSelectedIndexChanged="CheckBoxList_ActualBreakfast_Add_SelectedIndexChanged" RepeatDirection="Horizontal" RepeatLayout="Flow">
+            <asp:CheckBoxList ID="CheckBoxList_ActualBreakfast_Add" runat="server" RepeatDirection="Horizontal" RepeatLayout="Flow">
             </asp:CheckBoxList>
-            <asp:Button ID="Button_Actual_Breakfast_Add" runat="server" Text="Add"></asp:Button>
+            <asp:Button ID="Button_Actual_Breakfast_Add" runat="server" Text="Add" OnClick="Button_Actual_Breakfast_CheckBoxList_Add"></asp:Button>
         &nbsp;
             <br />
         </div>
@@ -99,6 +99,33 @@
                 </Columns>
             </asp:GridView>
             <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=BreakfastCards;Integrated Security=True;MultipleActiveResultSets=True;Application Name=EntityFramework" ProviderName="System.Data.SqlClient" SelectCommand="SELECT * FROM [Table_FourName]"></asp:SqlDataSource>
+        </div>
+        <div>
+            <asp:GridView ID="GridView2" runat="server" AutoGenerateColumns="False" DataKeyNames="ID" DataSourceID="SqlDataSource2">
+                <Columns>
+                    <asp:BoundField DataField="ID" HeaderText="ID" ReadOnly="True" SortExpression="ID" />
+                    <asp:BoundField DataField="Year" HeaderText="Year" SortExpression="Year" />
+                    <asp:BoundField DataField="Month" HeaderText="Month" SortExpression="Month" />
+                    <asp:BoundField DataField="GroupName" HeaderText="GroupName" SortExpression="GroupName" />
+                    <asp:BoundField DataField="Cards" HeaderText="Cards" SortExpression="Cards" />
+                    <asp:BoundField DataField="ActualQuantity" HeaderText="ActualQuantity" SortExpression="ActualQuantity" />
+                </Columns>
+            </asp:GridView>
+            <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=BreakfastCards;Integrated Security=True;MultipleActiveResultSets=True;Application Name=EntityFramework" ProviderName="System.Data.SqlClient" SelectCommand="SELECT * FROM [Table_ActualQuantity]"></asp:SqlDataSource>
+        </div>
+        <div>
+            <asp:GridView ID="GridView3" runat="server" AutoGenerateColumns="False" DataKeyNames="ID" DataSourceID="SqlDataSource3">
+                <Columns>
+                    <asp:BoundField DataField="ID" HeaderText="ID" ReadOnly="True" SortExpression="ID" />
+                    <asp:BoundField DataField="Year" HeaderText="Year" SortExpression="Year" />
+                    <asp:BoundField DataField="Month" HeaderText="Month" SortExpression="Month" />
+                    <asp:BoundField DataField="GroupName" HeaderText="GroupName" SortExpression="GroupName" />
+                    <asp:BoundField DataField="Cards" HeaderText="Cards" SortExpression="Cards" />
+                    <asp:BoundField DataField="Data" HeaderText="Data" SortExpression="Data" />
+                    <asp:BoundField DataField="Breakfast_Boolean" HeaderText="Breakfast_Boolean" SortExpression="Breakfast_Boolean" />
+                </Columns>
+            </asp:GridView>
+            <asp:SqlDataSource ID="SqlDataSource3" runat="server" ConnectionString="Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=BreakfastCards;Integrated Security=True;MultipleActiveResultSets=True;Application Name=EntityFramework" ProviderName="System.Data.SqlClient" SelectCommand="SELECT * FROM [Table_BreakfastBoolean]"></asp:SqlDataSource>
         </div>
     </form>
 </body>

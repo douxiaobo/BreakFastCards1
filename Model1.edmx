@@ -5,6 +5,29 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
       <Schema Namespace="BreakfastCardsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Table_ActualQuantity">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Year" Type="nchar" MaxLength="10" />
+          <Property Name="Month" Type="nchar" MaxLength="10" />
+          <Property Name="GroupName" Type="nchar" MaxLength="10" />
+          <Property Name="Cards" Type="nchar" MaxLength="10" />
+          <Property Name="ActualQuantity" Type="int" />
+        </EntityType>
+        <EntityType Name="Table_BreakfastBoolean">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Year" Type="nchar" MaxLength="10" />
+          <Property Name="Month" Type="nchar" MaxLength="10" />
+          <Property Name="GroupName" Type="nchar" MaxLength="10" />
+          <Property Name="Cards" Type="nchar" MaxLength="10" />
+          <Property Name="Data" Type="nchar" MaxLength="10" />
+          <Property Name="Breakfast_Boolean" Type="nchar" MaxLength="10" />
+        </EntityType>
         <EntityType Name="Table_FourName">
           <Key>
             <PropertyRef Name="ID" />
@@ -16,6 +39,8 @@
           <Property Name="Manager" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityContainer Name="BreakfastCardsModelStoreContainer">
+          <EntitySet Name="Table_ActualQuantity" EntityType="Self.Table_ActualQuantity" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Table_BreakfastBoolean" EntityType="Self.Table_BreakfastBoolean" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Table_FourName" EntityType="Self.Table_FourName" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema>
@@ -23,6 +48,29 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="BreakfastCardsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Table_ActualQuantity">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Year" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Month" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="GroupName" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Cards" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="ActualQuantity" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Table_BreakfastBoolean">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Year" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Month" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="GroupName" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Cards" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Data" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Breakfast_Boolean" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+        </EntityType>
         <EntityType Name="Table_FourName">
           <Key>
             <PropertyRef Name="ID" />
@@ -34,6 +82,8 @@
           <Property Name="Manager" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityContainer Name="BreakfastCardsEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Table_ActualQuantity" EntityType="Self.Table_ActualQuantity" />
+          <EntitySet Name="Table_BreakfastBoolean" EntityType="Self.Table_BreakfastBoolean" />
           <EntitySet Name="Table_FourName" EntityType="Self.Table_FourName" />
         </EntityContainer>
       </Schema>
@@ -42,6 +92,31 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="BreakfastCardsModelStoreContainer" CdmEntityContainer="BreakfastCardsEntities">
+          <EntitySetMapping Name="Table_ActualQuantity">
+            <EntityTypeMapping TypeName="BreakfastCardsModel.Table_ActualQuantity">
+              <MappingFragment StoreEntitySet="Table_ActualQuantity">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="Month" ColumnName="Month" />
+                <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+                <ScalarProperty Name="Cards" ColumnName="Cards" />
+                <ScalarProperty Name="ActualQuantity" ColumnName="ActualQuantity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Table_BreakfastBoolean">
+            <EntityTypeMapping TypeName="BreakfastCardsModel.Table_BreakfastBoolean">
+              <MappingFragment StoreEntitySet="Table_BreakfastBoolean">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="Month" ColumnName="Month" />
+                <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+                <ScalarProperty Name="Cards" ColumnName="Cards" />
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="Breakfast_Boolean" ColumnName="Breakfast_Boolean" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Table_FourName">
             <EntityTypeMapping TypeName="BreakfastCardsModel.Table_FourName">
               <MappingFragment StoreEntitySet="Table_FourName">

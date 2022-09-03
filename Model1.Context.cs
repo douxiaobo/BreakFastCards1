@@ -25,6 +25,8 @@ namespace BreakfastCards1
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Table_ActualQuantity> Table_ActualQuantity { get; set; }
+        public virtual DbSet<Table_BreakfastBoolean> Table_BreakfastBoolean { get; set; }
         public virtual DbSet<Table_FourName> Table_FourName { get; set; }
     }
 }
