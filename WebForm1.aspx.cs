@@ -18,6 +18,8 @@ namespace BreakfastCards1
     {
         string ThisYear = DateTime.Now.ToString("yyyy");
         string ThisMonth = DateTime.Now.ToString("MMMM", CultureInfo.GetCultureInfo("en-US"));
+
+        bool LostCard_bool;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -330,6 +332,46 @@ namespace BreakfastCards1
             return GroupName_Num[groupname];
         }
 
+        protected string Month_EngToDigit(string month)
+        {
+            Dictionary<string, string> Month_EngToDigit = new Dictionary<string, string>();
+            Month_EngToDigit.Add("January", "01");
+            Month_EngToDigit.Add("February", "02");
+            Month_EngToDigit.Add("March", "03");
+            Month_EngToDigit.Add("April", "04");
+            Month_EngToDigit.Add("May", "05");
+            Month_EngToDigit.Add("June", "06");
+            Month_EngToDigit.Add("July", "07");
+            Month_EngToDigit.Add("August", "08");
+            Month_EngToDigit.Add("September", "09");
+            Month_EngToDigit.Add("October", "10");
+            Month_EngToDigit.Add("November", "11");
+            Month_EngToDigit.Add("December", "12");
+            return Month_EngToDigit[month];
+        }
+
+        protected string EngOrderToDigit(string a)
+        {
+            Dictionary<string, string> EngOrderToDigit = new Dictionary<string, string>();
+            EngOrderToDigit.Add("First", "01");
+            EngOrderToDigit.Add("Second", "02");
+            EngOrderToDigit.Add("Third", "03");
+            EngOrderToDigit.Add("Fourth", "04");
+            EngOrderToDigit.Add("Fifth", "05");
+            EngOrderToDigit.Add("Sixth", "06");
+            EngOrderToDigit.Add("Seventh", "07");
+            EngOrderToDigit.Add("Eighth", "08");
+            EngOrderToDigit.Add("Ninth", "09");
+            EngOrderToDigit.Add("Tenth", "10");
+            EngOrderToDigit.Add("Eleventh", "11");
+            EngOrderToDigit.Add("Twelfth", "12");
+            EngOrderToDigit.Add("Thirteenth", "13");
+            EngOrderToDigit.Add("Fourteenth", "14");
+            EngOrderToDigit.Add("Fifteenth", "15");
+
+            return EngOrderToDigit[a];
+        }
+
         protected void Button_Revise_Click(object sender, EventArgs e)
         {
             BreakfastCardsEntities db = new BreakfastCardsEntities();
@@ -414,24 +456,6 @@ namespace BreakfastCards1
             }
         }
 
-        protected string Month_EngToDigit(string month)
-        {
-            Dictionary<string, string> Month_EngToDigit = new Dictionary<string, string>();
-            Month_EngToDigit.Add("January", "01");
-            Month_EngToDigit.Add("February", "02");
-            Month_EngToDigit.Add("March", "03");
-            Month_EngToDigit.Add("April", "04");
-            Month_EngToDigit.Add("May", "05");
-            Month_EngToDigit.Add("June", "06");
-            Month_EngToDigit.Add("July", "07");
-            Month_EngToDigit.Add("August", "08");
-            Month_EngToDigit.Add("September", "09");
-            Month_EngToDigit.Add("October", "10");
-            Month_EngToDigit.Add("November", "11");
-            Month_EngToDigit.Add("December", "12");
-            return Month_EngToDigit[month];
-        }
-
         protected void Button_Json_Click(object sender, EventArgs e)
         {
             int year = Convert.ToInt16(DropDownList_Json_Year.Text);
@@ -493,32 +517,13 @@ namespace BreakfastCards1
 
         protected void Button_Actual_Breakfast_CheckBoxList_Add(object sender, EventArgs e)
         {
-
-
             BreakfastCardsEntities db = new BreakfastCardsEntities();
 
             String year = DropDownList_ActualBreakfast_AddYear.SelectedValue;
             String month = Month_EngToDigit(DropDownList_ActualBreakfast_AddMonth.SelectedValue);
             String groupname=GroupName_Num(DropDownList_ActualBreakfast_AddGroupName.SelectedValue);
-            
-            Dictionary<string, string> ActualBreakfast_Add_EngToDigit = new Dictionary<string, string>();
-            ActualBreakfast_Add_EngToDigit.Add("First", "01");
-            ActualBreakfast_Add_EngToDigit.Add("Second", "02");
-            ActualBreakfast_Add_EngToDigit.Add("Third", "03");
-            ActualBreakfast_Add_EngToDigit.Add("Fourth", "04");
-            ActualBreakfast_Add_EngToDigit.Add("Fifth", "05");
-            ActualBreakfast_Add_EngToDigit.Add("Sixth", "06");
-            ActualBreakfast_Add_EngToDigit.Add("Seventh", "07");
-            ActualBreakfast_Add_EngToDigit.Add("Eighth", "08");
-            ActualBreakfast_Add_EngToDigit.Add("Ninth", "09");
-            ActualBreakfast_Add_EngToDigit.Add("Tenth", "10");
-            ActualBreakfast_Add_EngToDigit.Add("Eleventh", "11");
-            ActualBreakfast_Add_EngToDigit.Add("Twelfth", "12");
-            ActualBreakfast_Add_EngToDigit.Add("Thirteenth", "13");
-            ActualBreakfast_Add_EngToDigit.Add("Fourteenth", "14");
-            ActualBreakfast_Add_EngToDigit.Add("Fifteenth", "15");
 
-            String cards = ActualBreakfast_Add_EngToDigit[DropDownList_ActualBreakfast_AddCards.SelectedValue];
+            String cards = EngOrderToDigit(DropDownList_ActualBreakfast_AddCards.SelectedValue);
 
             int actualquantity = 0;
 
@@ -532,10 +537,10 @@ namespace BreakfastCards1
             a.GroupName = DropDownList_ActualBreakfast_AddGroupName.SelectedValue;
             a.Cards = DropDownList_ActualBreakfast_AddCards.SelectedValue;
 
-            foreach (ListItem item in CheckBoxList_ActualBreakfast_Add.Items)
-            {
-                Table_BreakfastBoolean b = new Table_BreakfastBoolean();                   
+            Table_BreakfastBoolean b = new Table_BreakfastBoolean();
 
+            foreach (ListItem item in CheckBoxList_ActualBreakfast_Add.Items)       //代码有问题。
+            {       
                 //在Table_BreakfastBoolean里，ID的规则，顺序分别：4位是年份，2位是月份，2位是团队代号，2位是卡号顺序，2位是日期
                 b.ID = year + month + groupname + cards+ item.Text.Substring(8);
                 b.Year = year;
@@ -553,14 +558,101 @@ namespace BreakfastCards1
                 {
                     b.Breakfast_Boolean = "False";
                 }
-                db.Table_BreakfastBoolean.Add(b);
-                db.SaveChanges();                               //失败，不知道怎么解决。
-                Response.Redirect(Request.Url.ToString());
+                try
+                {
+                    db.Table_BreakfastBoolean.Add(b);
+                    //db.SaveChanges();                               //失败，不知道怎么解决。
+                    //Response.Redirect(Request.Url.ToString());
+                }
+                catch(System.Data.Entity.Infrastructure.DbUpdateException)
+                {
+                    Label_Json.Text = "Sorry_ActualBreakfast_Add";
+                }
+                
             }
             a.ActualQuantity = actualquantity;
             db.Table_ActualQuantity.Add(a);
             db.SaveChanges();
             Response.Redirect(Request.Url.ToString());
+        }
+
+        protected void FullAttendanceAndLostCard()
+        {
+            BreakfastCardsEntities db = new BreakfastCardsEntities();
+
+            String year = DropDownList_ActualBreakfast_AddYear.SelectedValue;
+            String month = Month_EngToDigit(DropDownList_ActualBreakfast_AddMonth.SelectedValue);
+            String groupname = GroupName_Num(DropDownList_ActualBreakfast_AddGroupName.SelectedValue);
+            
+            String cards = EngOrderToDigit(DropDownList_ActualBreakfast_AddCards.SelectedValue);
+
+            int actualquantity = 0;
+
+            Table_ActualQuantity a = new Table_ActualQuantity();
+
+            //在Table_ActualQuantity里，ID的规则，顺序分别：4位年份，2位月份，2位团队代码，2位卡号顺序。
+            a.ID = year + month + groupname + cards;
+
+            a.Year = year;
+            a.Month = DropDownList_ActualBreakfast_AddMonth.SelectedValue;
+            a.GroupName = DropDownList_ActualBreakfast_AddGroupName.SelectedValue;
+            a.Cards = DropDownList_ActualBreakfast_AddCards.SelectedValue;
+
+            if (LostCard_bool == true)
+            {
+                a.LostCard_Boolean = "True";
+            }
+            else
+            {
+                a.LostCard_Boolean = "False";
+            }
+
+            Table_BreakfastBoolean b = new Table_BreakfastBoolean();
+
+            foreach (ListItem item in CheckBoxList_ActualBreakfast_Add.Items)       //代码有问题。
+            {                
+                //在Table_BreakfastBoolean里，ID的规则，顺序分别：4位是年份，2位是月份，2位是团队代号，2位是卡号顺序，2位是日期
+                b.ID = year + month + groupname + cards + item.Text.Substring(8);
+                b.Year = year;
+                b.Month = DropDownList_ActualBreakfast_AddMonth.SelectedValue;
+                b.GroupName = DropDownList_ActualBreakfast_AddGroupName.SelectedValue;
+                b.Cards = DropDownList_ActualBreakfast_AddCards.SelectedValue;
+                b.Data = item.Text.Substring(8);
+                actualquantity++;
+                if (LostCard_bool==true)
+                {
+                    b.Breakfast_Boolean = "Null";
+                }
+                else
+                {
+                    b.Breakfast_Boolean = "True";
+                }
+                db.Table_BreakfastBoolean.Add(b);
+            }
+            a.ActualQuantity = actualquantity;
+            try
+            {
+                db.Table_ActualQuantity.Add(a);                
+                db.SaveChanges();
+                Response.Redirect(Request.Url.ToString());
+            }
+            catch (System.Data.Entity.Infrastructure.DbUpdateException)
+            {
+                Label_Json.Text = "Sorry_ActualBreakfast_Add";
+            }
+
+        }
+
+        protected void Button_FullAttendance_Click(object sender, EventArgs e)
+        {
+            LostCard_bool = false;
+            FullAttendanceAndLostCard() ;
+        }
+
+        protected void Button_LostCard_Click(object sender, EventArgs e)
+        {
+            LostCard_bool = true;
+            FullAttendanceAndLostCard();
         }
     }
 }
