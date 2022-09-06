@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -8,6 +9,7 @@ using System.Net;
 using System.Security.Policy;
 using System.Text;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -222,13 +224,13 @@ namespace BreakfastCards1
             int days = DateTime.DaysInMonth(year, month);
 
             DateTime dt = Convert.ToDateTime(DropDownList_ActualBreakfast_AddYear.Text + "-" + DropDownList_ActualBreakfast_AddMonth.Text + "-" + 01.ToString());
-
+            /*
             for (int i = 1; i <= days; i++)
             {
                 //我遇到一个棘手的问题，在CheckBoxList控件里，遇到周五之后，都要换行，不知道怎么解决。间隔距离，不知道怎么解决。
                 if (dt.DayOfWeek != DayOfWeek.Saturday && dt.DayOfWeek != DayOfWeek.Sunday) 
                 {
-                    /*
+                    
                     if ((i == 1 && dt.DayOfWeek == DayOfWeek.Friday) || (i == 4 && dt.DayOfWeek == DayOfWeek.Monday))
                         CheckBoxList_ActualBreakfast_Add.RepeatColumns = 1;
                     else if ((i == 1 && dt.DayOfWeek == DayOfWeek.Thursday) || (i == 2 && dt.DayOfWeek == DayOfWeek.Friday) || (i == 5 && dt.DayOfWeek == DayOfWeek.Monday))
@@ -241,12 +243,12 @@ namespace BreakfastCards1
                         CheckBoxList_ActualBreakfast_Add.RepeatColumns = 5;
                     else if(i>4)
                         CheckBoxList_ActualBreakfast_Add.RepeatColumns = 5;
-                    */
+                    
 
                     string url = @"http://timor.tech/api/holiday/info/";
                     url += year.ToString() + "-" + month.ToString() + "-" + i.ToString();
                     WebRequest request = WebRequest.Create(url);
-                    WebResponse response = request.GetResponse();
+                    WebResponse response = request.GetResponse();   //System.Net.WebException:“请求被中止: 操作超时。”
                     Stream webstream = response.GetResponseStream();
                     StreamReader streamReader = new StreamReader(webstream);
                     string json = streamReader.ReadToEnd();
@@ -259,6 +261,7 @@ namespace BreakfastCards1
                 dt = dt.AddDays(1);
             }
             //考虑中，打算创建数据库,ID,Year,Month,GroupName,Card,Date,Breakfast(boolean) 
+            */
         }
 
         protected void Button_Add_Comfirm_Click(object sender, EventArgs e)
@@ -456,22 +459,65 @@ namespace BreakfastCards1
             }
         }
 
-        protected void Button_Json_Click(object sender, EventArgs e)
+        private class JsonContent
         {
-            int year = Convert.ToInt16(DropDownList_Json_Year.Text);
+            public int code { get; set; }
+            public Types type { get; set; }
+            public Holiday holiday { get; set; }
+        }
 
-            int month = Convert.ToInt16(Month_EngToDigit(DropDownList_Json_Month.Text));
+        private class Types
+        {
+            public int type;
+            public string name;
+            public int week;
+        }
 
-            int days = DateTime.DaysInMonth(year, month);
-            Label_Json.Text = "The Days of Month:" + days + "<br/>";
-            DateTime dt = Convert.ToDateTime(DropDownList_Json_Year.Text + "-" + DropDownList_Json_Month.Text + "-" + 01.ToString());
-            int workDays = 0;
-            for (int i = 1; i <= days; i++)
+        private class Holiday
+        {
+            public bool holiday;
+            public string name;
+            public int wage;
+            public string date;
+            public int rest;
+        }
+
+        protected int workdays(string year, string month)
+        {
+            int workdays = 0;
+            int days=DateTime.DaysInMonth(Convert.ToInt16(year), Convert.ToInt16(Month_EngToDigit(month)));
+            DateTime dt = Convert.ToDateTime(year + "-" + month + "-" + 01.ToString());
+            for(int i=1;i<=days;i++)
             {
                 if (dt.DayOfWeek != DayOfWeek.Saturday && dt.DayOfWeek != DayOfWeek.Sunday)
                 {
                     string url = @"http://timor.tech/api/holiday/info/";
                     url += year.ToString() + "-" + month.ToString() + "-" + i.ToString();
+
+                    /*
+                    JavaScriptSerializer workdays_json = new JavaScriptSerializer();
+                    JsonContent content = workdays_json.Deserialize<JsonContent>(url);
+                    if (content.holiday.holiday != true)
+                        workdays++;
+                    */
+
+                    WebRequest request = WebRequest.Create(url);
+                    WebResponse response = request.GetResponse();       //System.Net.WebException:“无法连接到远程服务器”
+                    Stream webstream = response.GetResponseStream();
+                    StreamReader streamReader = new StreamReader(webstream);
+                    string json = streamReader.ReadToEnd();
+                    JavaScriptSerializer workdays_Json = new JavaScriptSerializer();
+                    JsonContent Workdays_Content = workdays_Json.Deserialize<JsonContent>(json);
+
+                    /*
+                    System.NullReferenceException:“未将对象引用设置到对象的实例。”
+
+                    BreakfastCards1.WebForm1.JsonContent.holiday.get 返回 null。
+                    */
+                    if (Workdays_Content.holiday.holiday != true|| Workdays_Content.holiday==null)
+                        workdays++;
+
+                    /*
                     WebRequest request = WebRequest.Create(url);
                     WebResponse response = request.GetResponse();
                     Stream webstream = response.GetResponseStream();
@@ -479,17 +525,29 @@ namespace BreakfastCards1
                     string json = streamReader.ReadToEnd();
                     JavaScriptSerializer json1 = new JavaScriptSerializer();
                     Dictionary<string, object> DicText = (Dictionary<string, object>)json1.DeserializeObject(json);
-                    if (DicText["holiday"] == null)
-                        workDays++;
+                    if (DicText["holiday"] == null )        //这个代码有问题，大括号/花括号的事，不知道怎么实现holiday!=true。
+                        workdays++;
+                    */
+                    /*  周一至周五非节假日的Json格式例子：
+                    {"code":0,
+                    "type":{"type":0,"name":"周四","week":4},
+                    "holiday":null}
+                    */
+                    /*
+                    https://timor.tech/api/holiday/info/2022-09-12的Json格式例子
+                    { "code":0,"type":{ "type":2,"name":"中秋节","week":1},"holiday":{ "holiday":true,"name":"中秋节","wage":2,"date":"2022-09-12","rest":1} }
+                    */
                 }
                 dt = dt.AddDays(1);
-            }
-            Label_Json.Text += "The WorkDays of Month:" + workDays + "<br/>";
+            }            
+            return workdays;
+        }
 
-            //json格式例子：
-            //{"code":0,
-            //"type":{"type":0,"name":"周四","week":4},
-            //"holiday":null}
+        protected void Button_Json_Click(object sender, EventArgs e)
+        {
+            int days = DateTime.DaysInMonth(Convert.ToInt16(DropDownList_Json_Year.Text), Convert.ToInt16(Month_EngToDigit(DropDownList_Json_Month.Text)));
+            Label_Json.Text = "The Days of Month:" + days + "<br/>";
+            Label_Json.Text += "The WorkDays of Month:" + workdays(DropDownList_Json_Year.Text,DropDownList_Json_Month.Text) + "<br/>";
         }
 
         protected void DropDownList_ActualBreakfast_AddYear_SelectedIndexChanged(object sender, EventArgs e)
@@ -578,7 +636,7 @@ namespace BreakfastCards1
 
         protected void FullAttendanceAndLostCard()
         {
-            BreakfastCardsEntities db = new BreakfastCardsEntities();
+            BreakfastCardsEntities dba = new BreakfastCardsEntities();
 
             String year = DropDownList_ActualBreakfast_AddYear.SelectedValue;
             String month = Month_EngToDigit(DropDownList_ActualBreakfast_AddMonth.SelectedValue);
@@ -605,12 +663,12 @@ namespace BreakfastCards1
             else
             {
                 a.LostCard_Boolean = "False";
-            }
-
-            Table_BreakfastBoolean b = new Table_BreakfastBoolean();
+            }           
 
             foreach (ListItem item in CheckBoxList_ActualBreakfast_Add.Items)       //代码有问题。
-            {                
+            {
+                BreakfastCardsEntities dbb = new BreakfastCardsEntities();
+                Table_BreakfastBoolean b = new Table_BreakfastBoolean();
                 //在Table_BreakfastBoolean里，ID的规则，顺序分别：4位是年份，2位是月份，2位是团队代号，2位是卡号顺序，2位是日期
                 b.ID = year + month + groupname + cards + item.Text.Substring(8);
                 b.Year = year;
@@ -627,13 +685,15 @@ namespace BreakfastCards1
                 {
                     b.Breakfast_Boolean = "True";
                 }
-                db.Table_BreakfastBoolean.Add(b);
+                dbb.Table_BreakfastBoolean.Add(b);
+                dbb.SaveChanges();
+                Response.Redirect(Request.Url.ToString());
             }
             a.ActualQuantity = actualquantity;
             try
             {
-                db.Table_ActualQuantity.Add(a);                
-                db.SaveChanges();
+                dba.Table_ActualQuantity.Add(a);                
+                dba.SaveChanges();
                 Response.Redirect(Request.Url.ToString());
             }
             catch (System.Data.Entity.Infrastructure.DbUpdateException)
