@@ -13,6 +13,11 @@ using System.Web.Helpers;
 using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Threading.Tasks;
+
+using LitJson;
+using Newtonsoft.Json.Linq;
+using System.Resources;
 
 namespace BreakfastCards1
 {
@@ -468,18 +473,18 @@ namespace BreakfastCards1
 
         private class Types
         {
-            public int type;
-            public string name;
-            public int week;
+            public string type { get; set; }
+            public string name { get; set; }
+            public int week { get; set; }
         }
 
         private class Holiday
         {
-            public bool holiday;
-            public string name;
-            public int wage;
-            public string date;
-            public int rest;
+            public string holiday { get; set; }
+            public string name { get; set; }
+            public int wage { get; set; }
+            public string date { get; set; }
+            public int rest { get; set; }
         }
 
         protected int workdays(string year, string month)
@@ -491,8 +496,62 @@ namespace BreakfastCards1
             {
                 if (dt.DayOfWeek != DayOfWeek.Saturday && dt.DayOfWeek != DayOfWeek.Sunday)
                 {
+                    /*
                     string url = @"http://timor.tech/api/holiday/info/";
                     url += year.ToString() + "-" + month.ToString() + "-" + i.ToString();
+                    */
+
+                    /*
+                    WebRequest request = WebRequest.Create(url);
+                    WebResponse response = request.GetResponse();
+                    Stream webstream = response.GetResponseStream();
+                    StreamReader streamReader = new StreamReader(webstream);
+                    string json = streamReader.ReadToEnd();
+                    JObject jobj = JObject.Parse(json);
+                    JArray types = JArray.Parse(jobj["type"].ToString());
+                    if (types["type"].ToString() == "1")
+                        workdays++;
+                    */
+
+                    string url = "https://www.mxnzp.com/api/holiday/single/";
+                    url += year.ToString() + "-" + month.ToString() + "-" + i.ToString().PadLeft(2,'0');
+                    url += "ignoreHoliday=false&app_id=igsgjipmqtktwrmp&app_secret=a2plWmRqNSs2MUNseVlSYnJtTEdzZz09";
+                    WebRequest request = WebRequest.Create(url);
+                    WebResponse response = request.GetResponse();
+                    Stream webstream = response.GetResponseStream();
+                    StreamReader streamReader = new StreamReader(webstream);
+                    string json = streamReader.ReadToEnd();
+                    Newtonsoft.Json.Linq.JObject jobject = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+                    string typeDsc = jobject["date"]["typeDes"].ToString();     //System.NullReferenceException:“未将对象引用设置到对象的实例。”
+                    if (typeDsc == "工作日")
+                        workdays++;
+
+                    /*
+                    WebRequest request = WebRequest.Create(url);
+                    WebResponse response = request.GetResponse();
+                    Stream webstream = response.GetResponseStream();
+                    StreamReader streamReader = new StreamReader(webstream);
+                    string json = streamReader.ReadToEnd();
+                    Newtonsoft.Json.Linq.JObject jobject = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+                    */
+                    /*
+                    string holiday = jobject["holiday"].ToString();
+                    if(holiday==null)
+                        workdays++;
+                    */
+                    /*
+                    decimal type_type = Convert.ToDecimal(jobject["type"]["type"]);
+                    if (type_type == 0)
+                        workdays++;
+                    */
+                    /*
+                    string type_type = jobject["type"]["type"].ToString();
+                    if (type_type == "0")
+                        workdays++;
+                    */
+
+
+
 
                     /*
                     JavaScriptSerializer workdays_json = new JavaScriptSerializer();
@@ -501,6 +560,7 @@ namespace BreakfastCards1
                         workdays++;
                     */
 
+                    /*
                     WebRequest request = WebRequest.Create(url);
                     WebResponse response = request.GetResponse();       //System.Net.WebException:“无法连接到远程服务器”
                     Stream webstream = response.GetResponseStream();
@@ -508,14 +568,35 @@ namespace BreakfastCards1
                     string json = streamReader.ReadToEnd();
                     JavaScriptSerializer workdays_Json = new JavaScriptSerializer();
                     JsonContent Workdays_Content = workdays_Json.Deserialize<JsonContent>(json);
+                    */
+
+
 
                     /*
                     System.NullReferenceException:“未将对象引用设置到对象的实例。”
 
                     BreakfastCards1.WebForm1.JsonContent.holiday.get 返回 null。
                     */
-                    if (Workdays_Content.holiday.holiday != true|| Workdays_Content.holiday==null)
+
+                    //if (Convert.ToInt16(Workdays_Content.type.type) == 0)
+                    //    workdays++;
+
+                    //if (Workdays_Content.type.type=='0')
+                    //    workdays++;
+
+
+                    /*
+                    WebRequest request = WebRequest.Create(url);
+                    WebResponse response = request.GetResponse();
+                    Stream webstream = response.GetResponseStream();
+                    StreamReader streamReader = new StreamReader(webstream);
+                    string json = streamReader.ReadToEnd();
+                    JavaScriptSerializer json1 = new JavaScriptSerializer();
+                    Dictionary<string, object> DicText = (Dictionary<string, object>)json1.DeserializeObject(json);
+
+                    if (DicText["type"] == 'Y')        //这个代码有问题，大括号/花括号的事，不知道怎么实现holiday!=true。
                         workdays++;
+                    */
 
                     /*
                     WebRequest request = WebRequest.Create(url);
