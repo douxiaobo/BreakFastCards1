@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using LitJson;
 using Newtonsoft.Json.Linq;
 using System.Resources;
+using Newtonsoft.Json;
 
 namespace BreakfastCards1
 {
@@ -476,6 +477,13 @@ namespace BreakfastCards1
             public string type { get; set; }
             public string name { get; set; }
             public int week { get; set; }
+            public string remark
+            {
+                get
+                {
+                    return type == "" ? "Workdays" : "rest";
+                }
+            }
         }
 
         private class Holiday
@@ -496,10 +504,15 @@ namespace BreakfastCards1
             {
                 if (dt.DayOfWeek != DayOfWeek.Saturday && dt.DayOfWeek != DayOfWeek.Sunday)
                 {
-                    /*
+                    
                     string url = @"http://timor.tech/api/holiday/info/";
-                    url += year.ToString() + "-" + month.ToString() + "-" + i.ToString();
-                    */
+                    url += year.ToString() + "-" + month.ToString() + "-" + i.ToString().PadLeft(2,'0');
+                    WebClient client = new WebClient();
+                    client.Encoding = Encoding.UTF8;
+                    var jsondata=client.DownloadString(url);
+                    var model = JsonConvert.DeserializeObject<Types>(jsondata);//Newtonsoft.Json.JsonReaderException:“Unexpected character encountered while parsing value: {. Path 'type', line 1, position 18.”
+                    if (model.type == "0")
+                        workdays++;
 
                     /*
                     WebRequest request = WebRequest.Create(url);
@@ -513,6 +526,7 @@ namespace BreakfastCards1
                         workdays++;
                     */
 
+                    /*
                     string url = "https://www.mxnzp.com/api/holiday/single/";
                     url += year.ToString() + "-" + month.ToString() + "-" + i.ToString().PadLeft(2,'0');
                     url += "ignoreHoliday=false&app_id=igsgjipmqtktwrmp&app_secret=a2plWmRqNSs2MUNseVlSYnJtTEdzZz09";
@@ -525,7 +539,7 @@ namespace BreakfastCards1
                     string typeDsc = jobject["date"]["typeDes"].ToString();     //System.NullReferenceException:“未将对象引用设置到对象的实例。”
                     if (typeDsc == "工作日")
                         workdays++;
-
+                    */
                     /*
                     WebRequest request = WebRequest.Create(url);
                     WebResponse response = request.GetResponse();
