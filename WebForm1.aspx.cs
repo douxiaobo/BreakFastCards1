@@ -19,6 +19,9 @@ using LitJson;
 using Newtonsoft.Json.Linq;
 using System.Resources;
 using Newtonsoft.Json;
+using BreakfastCards1.Core;
+using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Security.Cryptography;
 
 namespace BreakfastCards1
 {
@@ -230,13 +233,13 @@ namespace BreakfastCards1
             int days = DateTime.DaysInMonth(year, month);
 
             DateTime dt = Convert.ToDateTime(DropDownList_ActualBreakfast_AddYear.Text + "-" + DropDownList_ActualBreakfast_AddMonth.Text + "-" + 01.ToString());
-            /*
+            
             for (int i = 1; i <= days; i++)
             {
                 //我遇到一个棘手的问题，在CheckBoxList控件里，遇到周五之后，都要换行，不知道怎么解决。间隔距离，不知道怎么解决。
                 if (dt.DayOfWeek != DayOfWeek.Saturday && dt.DayOfWeek != DayOfWeek.Sunday) 
                 {
-                    
+                    /*
                     if ((i == 1 && dt.DayOfWeek == DayOfWeek.Friday) || (i == 4 && dt.DayOfWeek == DayOfWeek.Monday))
                         CheckBoxList_ActualBreakfast_Add.RepeatColumns = 1;
                     else if ((i == 1 && dt.DayOfWeek == DayOfWeek.Thursday) || (i == 2 && dt.DayOfWeek == DayOfWeek.Friday) || (i == 5 && dt.DayOfWeek == DayOfWeek.Monday))
@@ -249,7 +252,7 @@ namespace BreakfastCards1
                         CheckBoxList_ActualBreakfast_Add.RepeatColumns = 5;
                     else if(i>4)
                         CheckBoxList_ActualBreakfast_Add.RepeatColumns = 5;
-                    
+                    */
 
                     string url = @"http://timor.tech/api/holiday/info/";
                     url += year.ToString() + "-" + month.ToString() + "-" + i.ToString();
@@ -266,8 +269,7 @@ namespace BreakfastCards1
                 }
                 dt = dt.AddDays(1);
             }
-            //考虑中，打算创建数据库,ID,Year,Month,GroupName,Card,Date,Breakfast(boolean) 
-            */
+            
         }
 
         protected void Button_Add_Comfirm_Click(object sender, EventArgs e)
@@ -356,7 +358,7 @@ namespace BreakfastCards1
             Month_EngToDigit.Add("October", "10");
             Month_EngToDigit.Add("November", "11");
             Month_EngToDigit.Add("December", "12");
-            return Month_EngToDigit[month];
+            return Month_EngToDigit[month];         //System.Collections.Generic.KeyNotFoundException:“给定关键字不在字典中。”
         }
 
         protected string EngOrderToDigit(string a)
@@ -465,36 +467,6 @@ namespace BreakfastCards1
             }
         }
 
-        private class JsonContent
-        {
-            public int code { get; set; }
-            public Types type { get; set; }
-            public Holiday holiday { get; set; }
-        }
-
-        private class Types
-        {
-            public string type { get; set; }
-            public string name { get; set; }
-            public int week { get; set; }
-            public string remark
-            {
-                get
-                {
-                    return type == "" ? "Workdays" : "rest";
-                }
-            }
-        }
-
-        private class Holiday
-        {
-            public string holiday { get; set; }
-            public string name { get; set; }
-            public int wage { get; set; }
-            public string date { get; set; }
-            public int rest { get; set; }
-        }
-
         protected int workdays(string year, string month)
         {
             int workdays = 0;
@@ -504,16 +476,14 @@ namespace BreakfastCards1
             {
                 if (dt.DayOfWeek != DayOfWeek.Saturday && dt.DayOfWeek != DayOfWeek.Sunday)
                 {
-                    
-                    string url = @"http://timor.tech/api/holiday/info/";
-                    url += year.ToString() + "-" + month.ToString() + "-" + i.ToString().PadLeft(2,'0');
+                    /*                    
                     WebClient client = new WebClient();
                     client.Encoding = Encoding.UTF8;
                     var jsondata=client.DownloadString(url);
                     var model = JsonConvert.DeserializeObject<Types>(jsondata);//Newtonsoft.Json.JsonReaderException:“Unexpected character encountered while parsing value: {. Path 'type', line 1, position 18.”
                     if (model.type == "0")
                         workdays++;
-
+                    */
                     /*
                     WebRequest request = WebRequest.Create(url);
                     WebResponse response = request.GetResponse();
@@ -550,7 +520,8 @@ namespace BreakfastCards1
                     */
                     /*
                     string holiday = jobject["holiday"].ToString();
-                    if(holiday==null)
+                    if(holiday==null
+                    /*
                         workdays++;
                     */
                     /*
@@ -563,9 +534,6 @@ namespace BreakfastCards1
                     if (type_type == "0")
                         workdays++;
                     */
-
-
-
 
                     /*
                     JavaScriptSerializer workdays_json = new JavaScriptSerializer();
@@ -583,8 +551,6 @@ namespace BreakfastCards1
                     JavaScriptSerializer workdays_Json = new JavaScriptSerializer();
                     JsonContent Workdays_Content = workdays_Json.Deserialize<JsonContent>(json);
                     */
-
-
 
                     /*
                     System.NullReferenceException:“未将对象引用设置到对象的实例。”
@@ -612,22 +578,31 @@ namespace BreakfastCards1
                         workdays++;
                     */
 
-                    /*
+                    string url = @"http://timor.tech/api/holiday/info/";
+                    url += year.ToString() + "-" + month.ToString() + "-" + i.ToString().PadLeft(2, '0');
                     WebRequest request = WebRequest.Create(url);
                     WebResponse response = request.GetResponse();
                     Stream webstream = response.GetResponseStream();
                     StreamReader streamReader = new StreamReader(webstream);
                     string json = streamReader.ReadToEnd();
-                    JavaScriptSerializer json1 = new JavaScriptSerializer();
-                    Dictionary<string, object> DicText = (Dictionary<string, object>)json1.DeserializeObject(json);
-                    if (DicText["holiday"] == null )        //这个代码有问题，大括号/花括号的事，不知道怎么实现holiday!=true。
+                    var jsonDes = JsonConvert.DeserializeObject<WorkDay>(json);
+                    if (jsonDes.Type.Type == 0)
                         workdays++;
-                    */
+
+                    //Types type = json1.Deserialize<Types>(json1);
+                    //if (type["type"] == 1)
+                    ;//    workdays++;
+                    //Dictionary<string, object> DicText = (Dictionary<string, object>)json1.DeserializeObject(json);
+                    //if (DicText["holiday"] == null )        //这个代码有问题，大括号/花括号的事，不知道怎么实现holiday!=true。
+                    //    workdays++;
+                    
+
                     /*  周一至周五非节假日的Json格式例子：
                     {"code":0,
                     "type":{"type":0,"name":"周四","week":4},
                     "holiday":null}
                     */
+
                     /*
                     https://timor.tech/api/holiday/info/2022-09-12的Json格式例子
                     { "code":0,"type":{ "type":2,"name":"中秋节","week":1},"holiday":{ "holiday":true,"name":"中秋节","wage":2,"date":"2022-09-12","rest":1} }
@@ -729,17 +704,13 @@ namespace BreakfastCards1
             Response.Redirect(Request.Url.ToString());
         }
 
-        protected void FullAttendanceAndLostCard()
+        protected void FullAttendanceAndLostCard_ActualQuantity()
         {
-            BreakfastCardsEntities dba = new BreakfastCardsEntities();
-
+            BreakfastCardsEntities db = new BreakfastCardsEntities();
             String year = DropDownList_ActualBreakfast_AddYear.SelectedValue;
-            String month = Month_EngToDigit(DropDownList_ActualBreakfast_AddMonth.SelectedValue);
+            String month = Month_EngToDigit(DropDownList_ActualBreakfast_AddMonth.SelectedValue); 
             String groupname = GroupName_Num(DropDownList_ActualBreakfast_AddGroupName.SelectedValue);
-            
-            String cards = EngOrderToDigit(DropDownList_ActualBreakfast_AddCards.SelectedValue);
-
-            int actualquantity = 0;
+            String cards = EngOrderToDigit(DropDownList_ActualBreakfast_AddCards.SelectedValue);           
 
             Table_ActualQuantity a = new Table_ActualQuantity();
 
@@ -758,11 +729,27 @@ namespace BreakfastCards1
             else
             {
                 a.LostCard_Boolean = "False";
-            }           
+            }
+            int workday = workdays(year, month);
+            a.ActualQuantity = workday;
+            db.Table_ActualQuantity.Add(a);
+            db.SaveChanges();
+            Response.Redirect(Request.Url.ToString());
+        }
+
+        protected void FullAttendanceAndLostCard_BreakfastBoolean() 
+        {
+            BreakfastCardsEntities db = new BreakfastCardsEntities();
+
+            String year = DropDownList_ActualBreakfast_AddYear.SelectedValue;
+            String month = Month_EngToDigit(DropDownList_ActualBreakfast_AddMonth.SelectedValue);
+            String groupname = GroupName_Num(DropDownList_ActualBreakfast_AddGroupName.SelectedValue);
+            String cards = EngOrderToDigit(DropDownList_ActualBreakfast_AddCards.SelectedValue);
+
+            int actualquantity = 0;
 
             foreach (ListItem item in CheckBoxList_ActualBreakfast_Add.Items)       //代码有问题。
             {
-                BreakfastCardsEntities dbb = new BreakfastCardsEntities();
                 Table_BreakfastBoolean b = new Table_BreakfastBoolean();
                 //在Table_BreakfastBoolean里，ID的规则，顺序分别：4位是年份，2位是月份，2位是团队代号，2位是卡号顺序，2位是日期
                 b.ID = year + month + groupname + cards + item.Text.Substring(8);
@@ -772,7 +759,7 @@ namespace BreakfastCards1
                 b.Cards = DropDownList_ActualBreakfast_AddCards.SelectedValue;
                 b.Data = item.Text.Substring(8);
                 actualquantity++;
-                if (LostCard_bool==true)
+                if (LostCard_bool == true)
                 {
                     b.Breakfast_Boolean = "Null";
                 }
@@ -780,34 +767,24 @@ namespace BreakfastCards1
                 {
                     b.Breakfast_Boolean = "True";
                 }
-                dbb.Table_BreakfastBoolean.Add(b);
-                dbb.SaveChanges();
+                db.Table_BreakfastBoolean.Add(b);
+                db.SaveChanges();
                 Response.Redirect(Request.Url.ToString());
             }
-            a.ActualQuantity = actualquantity;
-            try
-            {
-                dba.Table_ActualQuantity.Add(a);                
-                dba.SaveChanges();
-                Response.Redirect(Request.Url.ToString());
-            }
-            catch (System.Data.Entity.Infrastructure.DbUpdateException)
-            {
-                Label_Json.Text = "Sorry_ActualBreakfast_Add";
-            }
-
         }
 
         protected void Button_FullAttendance_Click(object sender, EventArgs e)
         {
             LostCard_bool = false;
-            FullAttendanceAndLostCard() ;
+            FullAttendanceAndLostCard_ActualQuantity() ;
+            FullAttendanceAndLostCard_BreakfastBoolean();
         }
 
         protected void Button_LostCard_Click(object sender, EventArgs e)
         {
             LostCard_bool = true;
-            FullAttendanceAndLostCard();
+            FullAttendanceAndLostCard_ActualQuantity();
+            FullAttendanceAndLostCard_BreakfastBoolean();
         }
     }
 }
