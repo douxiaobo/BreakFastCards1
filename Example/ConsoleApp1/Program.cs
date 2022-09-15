@@ -31,14 +31,39 @@ namespace ConsoleApp1
                 string url = @"http://timor.tech/api/holiday/info/";
                 url += year.ToString() + "-" + month.ToString().PadLeft(2, '0') + "-" + day.ToString().PadLeft(2, '0');
                 Console.WriteLine(url);
-                WebRequest request = WebRequest.Create(url);
-                WebResponse response = request.GetResponse();
-                Stream webstream = response.GetResponseStream();
-                StreamReader streamReader = new StreamReader(webstream);
-                string json = streamReader.ReadToEnd();
-                Console.WriteLine(json);
-                var jsonDes = JsonConvert.DeserializeObject<Workdays>(json);
-                Console.WriteLine(jsonDes.Type.Type);
+                try
+                {
+                    WebClient wc = new WebClient();
+                    wc.Credentials = CredentialCache.DefaultCredentials;
+                    wc.Encoding = Encoding.UTF8;
+                    string returnText = wc.DownloadString(url);
+                    Console.WriteLine(returnText);
+                    var jsonDes= JsonConvert.DeserializeObject<Workdays>(returnText);
+                    Console.WriteLine(jsonDes.Type.Type);
+
+                    /*
+                    WebRequest request = WebRequest.Create(url);
+                    WebResponse response = request.GetResponse();
+                    Stream webstream = response.GetResponseStream();
+                    StreamReader streamReader = new StreamReader(webstream);
+                    string json = streamReader.ReadToEnd();
+                    Console.WriteLine(json);
+                    var jsonDes = JsonConvert.DeserializeObject<Workdays>(json);
+                    Console.WriteLine(jsonDes.Type.Type);
+                    */
+                }
+                catch
+                {
+                    Uri uri = new Uri(url);
+                    HttpWebRequest httpReq = (HttpWebRequest)WebRequest.Create(uri);
+                    HttpWebResponse httpResp = (HttpWebResponse)httpReq.GetResponse();
+                    Stream respStream = httpResp.GetResponseStream();
+                    StreamReader respStreamReader = new StreamReader(respStream, Encoding.UTF8);
+                    string strBuff = respStreamReader.ReadToEnd();
+                    Console.WriteLine(strBuff);
+                    var jsonDes = JsonConvert.DeserializeObject<Workdays>(strBuff);
+                    Console.WriteLine(jsonDes.Type.Type);
+                }     
                 Console.ReadKey();
             }
             else
@@ -50,7 +75,7 @@ namespace ConsoleApp1
                 int days = DateTime.DaysInMonth(Convert.ToInt16(year), Convert.ToInt16(month));
                 DateTime dt = Convert.ToDateTime(year + "-" + month + "-" + 01.ToString());
                 int workdays = 0;
-                for(int i=0;i<=days;i++)
+                for(int i=1;i<=days;i++)
                 {
                     if(dt.DayOfWeek != DayOfWeek.Saturday && dt.DayOfWeek != DayOfWeek.Sunday)
                     {
@@ -62,8 +87,7 @@ namespace ConsoleApp1
                         StreamReader streamReader = new StreamReader(webstream);
                         string json = streamReader.ReadToEnd();
                         var jsonDes = JsonConvert.DeserializeObject<Workdays>(json);
-                        string type = jsonDes.Type.Type.ToString();
-                        if (type == "0")
+                        if (Convert.ToInt16(jsonDes.Type.Type) == 0)
                             workdays++;
                     }
                     dt = dt.AddDays(1);

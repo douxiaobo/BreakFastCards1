@@ -253,23 +253,49 @@ namespace BreakfastCards1
                     else if(i>4)
                         CheckBoxList_ActualBreakfast_Add.RepeatColumns = 5;
                     */
-
+                    
                     string url = @"http://timor.tech/api/holiday/info/";
-                    url += year.ToString() + "-" + month.ToString() + "-" + i.ToString();
-                    WebRequest request = WebRequest.Create(url);
-                    WebResponse response = request.GetResponse();   //System.Net.WebException:“请求被中止: 操作超时。”
-                    Stream webstream = response.GetResponseStream();
-                    StreamReader streamReader = new StreamReader(webstream);
-                    string json = streamReader.ReadToEnd();
-                    JavaScriptSerializer json1 = new JavaScriptSerializer();
-                    Dictionary<string, object> DicText = (Dictionary<string, object>)json1.DeserializeObject(json);
-                    if (DicText["holiday"] == null)
+                    url += year.ToString() + "-" + month.ToString() + "-" + i.ToString().PadLeft(2, '0');
+                    string json=urltojson(url);
+                    var jsonDes = JsonConvert.DeserializeObject<WorkDay>(json);
+                    if (Convert.ToInt16(jsonDes.Type.Type) == 0)
                         CheckBoxList_ActualBreakfast_Add.Items.Add(DropDownList_ActualBreakfast_AddYear.Text + "-" + Month_EngToDigit(DropDownList_ActualBreakfast_AddMonth.Text) + "-" + i.ToString("00"));
                     
                 }
                 dt = dt.AddDays(1);
             }
             
+        }
+
+        protected string urltojson(string url)
+        {
+            try
+            {
+                WebRequest request = WebRequest.Create(url);
+                WebResponse response = request.GetResponse();   //System.Net.WebException:“请求被中止: 操作超时。”//System.Net.WebException:“远程服务器返回错误: (429) Too Many Requests。”
+                Stream webstream = response.GetResponseStream();
+                StreamReader streamReader = new StreamReader(webstream);
+                string json = streamReader.ReadToEnd();
+                return json;
+            }
+            catch(System.Net.WebException)
+            {
+                WebClient wc = new WebClient();
+                wc.Credentials=CredentialCache.DefaultCredentials;
+                wc.Encoding=Encoding.UTF8;
+                string returnText=wc.DownloadString(url);   //System.Net.WebException:“远程服务器返回错误: (429) Too Many Requests。”
+                return returnText;
+
+                /*
+                Uri uri = new Uri(url);
+                HttpWebRequest httpReq = (HttpWebRequest)WebRequest.Create(uri);
+                HttpWebResponse httpResp = (HttpWebResponse)httpReq.GetResponse();//System.Net.WebException:“远程服务器返回错误: (429) Too Many Requests。”
+                Stream respStream = httpResp.GetResponseStream();
+                StreamReader respStreamReader = new StreamReader(respStream, Encoding.UTF8);
+                string strBuff = respStreamReader.ReadToEnd();
+                return strBuff;
+                */
+            }
         }
 
         protected void Button_Add_Comfirm_Click(object sender, EventArgs e)
@@ -476,6 +502,13 @@ namespace BreakfastCards1
             {
                 if (dt.DayOfWeek != DayOfWeek.Saturday && dt.DayOfWeek != DayOfWeek.Sunday)
                 {
+                    string url = @"http://timor.tech/api/holiday/info/";
+                    url += year.ToString() + "-" + month.ToString() + "-" + i.ToString().PadLeft(2, '0');
+                    string json = urltojson(url);
+                    var jsonDes = JsonConvert.DeserializeObject<WorkDay>(json);
+                    if (Convert.ToInt16(jsonDes.Type.Type) == 0)
+                        workdays++;
+
                     /*                    
                     WebClient client = new WebClient();
                     client.Encoding = Encoding.UTF8;
@@ -578,16 +611,8 @@ namespace BreakfastCards1
                         workdays++;
                     */
 
-                    string url = @"http://timor.tech/api/holiday/info/";
-                    url += year.ToString() + "-" + month.ToString() + "-" + i.ToString().PadLeft(2, '0');
-                    WebRequest request = WebRequest.Create(url);
-                    WebResponse response = request.GetResponse();
-                    Stream webstream = response.GetResponseStream();
-                    StreamReader streamReader = new StreamReader(webstream);
-                    string json = streamReader.ReadToEnd();
-                    var jsonDes = JsonConvert.DeserializeObject<WorkDay>(json);
-                    if (jsonDes.Type.Type == 0)
-                        workdays++;
+
+
 
                     //Types type = json1.Deserialize<Types>(json1);
                     //if (type["type"] == 1)
