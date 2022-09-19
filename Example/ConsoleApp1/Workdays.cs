@@ -19,9 +19,9 @@ namespace ConsoleApp1
         public TypeClass Type { get; set; }
 
         [JsonProperty("holiday")]
-        public Holiday Holiday { get; set; }
+        public Holiday_Workday Holiday_Workdays { get; set; }
     }
-    public partial class Holiday
+    public partial class Holiday_Workday
     {
         [JsonProperty("holiday")]
         public bool HolidayHoliday { get; set; }

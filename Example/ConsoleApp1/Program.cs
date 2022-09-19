@@ -11,6 +11,10 @@ using System.Web.Script.Serialization;
 using Newtonsoft.Json.Serialization;
 using System.Text.Json;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using System.Globalization;
+using Newtonsoft.Json.Converters;
+using LitJson;
+using System.Collections;
 
 namespace ConsoleApp1
 {
@@ -20,7 +24,7 @@ namespace ConsoleApp1
         {
             Console.Write("选日期，按下A，还是月份，按下B：");
             String Choose=Console.ReadLine();
-            if (Choose == "A")
+            if (Choose == "A" || Choose == "a")
             {
                 Console.Write("年份：");
                 String year = Console.ReadLine();
@@ -38,7 +42,7 @@ namespace ConsoleApp1
                     wc.Encoding = Encoding.UTF8;
                     string returnText = wc.DownloadString(url);
                     Console.WriteLine(returnText);
-                    var jsonDes= JsonConvert.DeserializeObject<Workdays>(returnText);
+                    var jsonDes = JsonConvert.DeserializeObject<Workdays>(returnText);
                     Console.WriteLine(jsonDes.Type.Type);
 
                     /*
@@ -63,39 +67,92 @@ namespace ConsoleApp1
                     Console.WriteLine(strBuff);
                     var jsonDes = JsonConvert.DeserializeObject<Workdays>(strBuff);
                     Console.WriteLine(jsonDes.Type.Type);
-                }     
+                }
                 Console.ReadKey();
             }
-            else
+            else if (Choose == "B" || Choose == "b")
             {
                 Console.Write("年份：");
                 String year = Console.ReadLine();
                 Console.Write("月份：");
                 String month = Console.ReadLine();
-                int days = DateTime.DaysInMonth(Convert.ToInt16(year), Convert.ToInt16(month));
                 DateTime dt = Convert.ToDateTime(year + "-" + month + "-" + 01.ToString());
-                int workdays = 0;
-                for(int i=1;i<=days;i++)
+                int days = DateTime.DaysInMonth(Convert.ToInt16(year), Convert.ToInt16(month));
+                
+
+                string url = @"http://timor.tech/api/holiday/year/";
+                url += year.ToString() + "-" + month.ToString().PadLeft(2, '0');
+                WebRequest request = WebRequest.Create(url);
+                WebResponse response = request.GetResponse();//System.Net.WebException:“未能解析此远程名称: 'timor.tch'”
+                Stream webstream = response.GetResponseStream();
+                StreamReader streamReader = new StreamReader(webstream);
+                string json = streamReader.ReadToEnd();
+                Console.WriteLine("json=");
+                Console.WriteLine(json);
+                List<string> holidaylist_for = new List<string>();
+                var holidaylist_foreach=new List<string>();
+                var root = JsonConvert.DeserializeObject<Holiday>(json);
+                var keys = root.HolidayHoliday1.Keys;
+                foreach(var key in keys)
                 {
-                    if(dt.DayOfWeek != DayOfWeek.Saturday && dt.DayOfWeek != DayOfWeek.Sunday)
+                    Console.WriteLine(key);
+                    holidaylist_for.Add(key);
+                    holidaylist_foreach.Add(key);
+                }
+                Console.WriteLine("holidaylist_For=");
+                for(int i=0;i<holidaylist_for.Count;i++)
+                {
+                    Console.WriteLine(holidaylist_for[i]);
+                }
+                Console.WriteLine("holidaylist_foreach=");
+                foreach(string date in holidaylist_foreach)
+                {
+                    Console.WriteLine(date);
+                }
+
+
+
+
+
+                /*
+                代码正确的
+                WebClient wc = new WebClient();
+                wc.Credentials = CredentialCache.DefaultCredentials;
+                wc.Encoding = Encoding.UTF8;
+                string returnText = wc.DownloadString(url);//System.Net.WebException:“未能解析此远程名称: 'timor.tch'”
+                Console.WriteLine("returnText=");
+                Console.WriteLine(returnText);
+                */
+
+                int workdays = 0;
+                var workdaylist = new List<string>();
+                bool workdaybool;
+                for (int i = 1;i<=days;i++)
+                {
+                    string date_check = month.ToString().PadLeft(2,'0') + "-" + i.ToString().PadLeft(2, '0');
+                    if(dt.DayOfWeek!=DayOfWeek.Saturday&&dt.DayOfWeek != DayOfWeek.Sunday) 
                     {
-                        string url = @"http://timor.tech/api/holiday/info/";
-                        url += year+ "-" + month + "-" + i.ToString().PadLeft(2, '0');
-                        WebRequest request = WebRequest.Create(url);
-                        WebResponse response = request.GetResponse();
-                        Stream webstream = response.GetResponseStream();
-                        StreamReader streamReader = new StreamReader(webstream);
-                        string json = streamReader.ReadToEnd();
-                        var jsonDes = JsonConvert.DeserializeObject<Workdays>(json);
-                        if (Convert.ToInt16(jsonDes.Type.Type) == 0)
+                        workdaybool = true;
+                        foreach(string date in holidaylist_foreach)
+                        {
+                            if (date_check == date)
+                                workdaybool = false;
+                        }
+                        if (workdaybool == true)
+                        {
                             workdays++;
+                            workdaylist.Add(date_check);
+                        }
                     }
                     dt = dt.AddDays(1);
                 }
-                Console.WriteLine("Days in a month:", days);
-                Console.WriteLine("Workdays:",workdays);
+                Console.WriteLine(workdays);
+                foreach(string data in workdaylist)
+                {
+                    Console.WriteLine(data+"\t");
+                }
                 Console.ReadKey();
-            }                
+            }   
         }
     }
 }

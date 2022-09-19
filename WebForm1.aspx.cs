@@ -38,8 +38,8 @@ namespace BreakfastCards1
                 BindYear();
                 BindMonth();
                 BindGroupName();
-                BindActualBreakfast_AddCards();
-                BindActualBreakfast_Add_CheckboxList();
+                //BindActualBreakfast_AddCards();
+                //BindActualBreakfast_Add_CheckboxList();
                 GridView1.DataBind();
             }
             /*
@@ -234,7 +234,7 @@ namespace BreakfastCards1
 
             DateTime dt = Convert.ToDateTime(DropDownList_ActualBreakfast_AddYear.Text + "-" + DropDownList_ActualBreakfast_AddMonth.Text + "-" + 01.ToString());
             
-            for (int i = 1; i <= days; i++)
+            for (int i = 1; i <= days; i++) // 问题出在这里，这里重复了多次去触发下文的request
             {
                 //我遇到一个棘手的问题，在CheckBoxList控件里，遇到周五之后，都要换行，不知道怎么解决。间隔距离，不知道怎么解决。
                 if (dt.DayOfWeek != DayOfWeek.Saturday && dt.DayOfWeek != DayOfWeek.Sunday) 
@@ -271,7 +271,7 @@ namespace BreakfastCards1
         {
             try
             {
-                WebRequest request = WebRequest.Create(url);
+                WebRequest request = WebRequest.Create(url); // 这里重复多次去请求页面，导致了429的问题，我们要避免这样的情况发生，不能短时间内触发多个request去页面
                 WebResponse response = request.GetResponse();   //System.Net.WebException:“请求被中止: 操作超时。”//System.Net.WebException:“远程服务器返回错误: (429) Too Many Requests。”
                 Stream webstream = response.GetResponseStream();
                 StreamReader streamReader = new StreamReader(webstream);
