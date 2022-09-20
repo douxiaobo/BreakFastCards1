@@ -29,17 +29,19 @@ namespace BreakfastCards1
     {
         string ThisYear = DateTime.Now.ToString("yyyy");
         string ThisMonth = DateTime.Now.ToString("MMMM", CultureInfo.GetCultureInfo("en-US"));
+        List<string> HolidaysList=new List<string>();
+        List<string> WorkdaysList = new List<string>();
 
         bool LostCard_bool;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                BindYear();
-                BindMonth();
-                BindGroupName();
-                //BindActualBreakfast_AddCards();
-                //BindActualBreakfast_Add_CheckboxList();
+                BindYear();                                             //年份
+                BindMonth();                                            //月份
+                BindGroupName();                                        //
+                BindActualBreakfast_AddCards();                         //
+                BindActualBreakfast_Add_CheckboxList();                 //
                 GridView1.DataBind();
             }
             /*
@@ -57,7 +59,7 @@ namespace BreakfastCards1
         {
             DropDownList_ActualBreakfast_AddYear.Items.Clear();
             DropDownList_ActualBreakfast_InquiryYear.Items.Clear();
-            DropDownList_Add_Year.Items.Clear();
+            DropDownList_Add_Year.Items.Clear();                        //Add增加的年份Clear
             DropDownList_Delete_Year.Items.Clear();
             DropDownList_Inquiry_Year.Items.Clear();
             DropDownList_Json_Year.Items.Clear();
@@ -88,7 +90,7 @@ namespace BreakfastCards1
             DropDownList_Add_Month.Items.Clear();
             DropDownList_Delete_Month.Items.Clear();
             DropDownList_Inquiry_Month.Items.Clear();
-            DropDownList_Json_Month.Items.Clear();
+            //DropDownList_Json_Month.Items.Clear();
             DropDownList_Revise_Month.Items.Clear();
 
             DropDownList_Inquiry_Month.Items.Add("Never Choose");
@@ -116,7 +118,7 @@ namespace BreakfastCards1
                 DropDownList_Add_Month.Items.Add(Month_DigitToEng[i]);
                 DropDownList_Delete_Month.Items.Add(Month_DigitToEng[i]);
                 DropDownList_Inquiry_Month.Items.Add(Month_DigitToEng[i]);
-                DropDownList_Json_Month.Items.Add(Month_DigitToEng[i]);
+                //DropDownList_Json_Month.Items.Add(Month_DigitToEng[i]);
                 DropDownList_Revise_Month.Items.Add(Month_DigitToEng[i]);
             }
             for(int i=1;i<Convert.ToInt16(ThisMonth)-1;i++)
@@ -126,7 +128,7 @@ namespace BreakfastCards1
                 DropDownList_Add_Month.Items.Add(Month_DigitToEng[i]);
                 DropDownList_Delete_Month.Items.Add(Month_DigitToEng[i]);
                 DropDownList_Inquiry_Month.Items.Add(Month_DigitToEng[i]);
-                DropDownList_Json_Month.Items.Add(Month_DigitToEng[i]);
+                //DropDownList_Json_Month.Items.Add(Month_DigitToEng[i]);
                 DropDownList_Revise_Month.Items.Add(Month_DigitToEng[i]);
             }
 
@@ -254,12 +256,8 @@ namespace BreakfastCards1
                         CheckBoxList_ActualBreakfast_Add.RepeatColumns = 5;
                     */
                     
-                    string url = @"http://timor.tech/api/holiday/info/";
-                    url += year.ToString() + "-" + month.ToString() + "-" + i.ToString().PadLeft(2, '0');
-                    string json=urltojson(url);
-                    var jsonDes = JsonConvert.DeserializeObject<WorkDay>(json);
-                    if (Convert.ToInt16(jsonDes.Type.Type) == 0)
-                        CheckBoxList_ActualBreakfast_Add.Items.Add(DropDownList_ActualBreakfast_AddYear.Text + "-" + Month_EngToDigit(DropDownList_ActualBreakfast_AddMonth.Text) + "-" + i.ToString("00"));
+
+                    
                     
                 }
                 dt = dt.AddDays(1);
@@ -269,33 +267,10 @@ namespace BreakfastCards1
 
         protected string urltojson(string url)
         {
-            try
-            {
-                WebRequest request = WebRequest.Create(url); // 这里重复多次去请求页面，导致了429的问题，我们要避免这样的情况发生，不能短时间内触发多个request去页面
-                WebResponse response = request.GetResponse();   //System.Net.WebException:“请求被中止: 操作超时。”//System.Net.WebException:“远程服务器返回错误: (429) Too Many Requests。”
-                Stream webstream = response.GetResponseStream();
-                StreamReader streamReader = new StreamReader(webstream);
-                string json = streamReader.ReadToEnd();
-                return json;
-            }
-            catch(System.Net.WebException)
-            {
-                WebClient wc = new WebClient();
-                wc.Credentials=CredentialCache.DefaultCredentials;
-                wc.Encoding=Encoding.UTF8;
-                string returnText=wc.DownloadString(url);   //System.Net.WebException:“远程服务器返回错误: (429) Too Many Requests。”
-                return returnText;
-
-                /*
-                Uri uri = new Uri(url);
-                HttpWebRequest httpReq = (HttpWebRequest)WebRequest.Create(uri);
-                HttpWebResponse httpResp = (HttpWebResponse)httpReq.GetResponse();//System.Net.WebException:“远程服务器返回错误: (429) Too Many Requests。”
-                Stream respStream = httpResp.GetResponseStream();
-                StreamReader respStreamReader = new StreamReader(respStream, Encoding.UTF8);
-                string strBuff = respStreamReader.ReadToEnd();
-                return strBuff;
-                */
-            }
+            WebClient webClient = new WebClient();
+            webClient.Credentials = CredentialCache.DefaultCredentials;
+            webClient.Encoding = Encoding.UTF8;
+            return (string)webClient.DownloadString(url);
         }
 
         protected void Button_Add_Comfirm_Click(object sender, EventArgs e)
@@ -498,140 +473,32 @@ namespace BreakfastCards1
             int workdays = 0;
             int days=DateTime.DaysInMonth(Convert.ToInt16(year), Convert.ToInt16(Month_EngToDigit(month)));
             DateTime dt = Convert.ToDateTime(year + "-" + month + "-" + 01.ToString());
-            for(int i=1;i<=days;i++)
+            string url = @"http://timor.tech/api/holiday/year/";
+            url += year.ToString() + "-" + month.ToString().PadLeft(2, '0');
+            string returnText = urltojson(url);
+            var root = JsonConvert.DeserializeObject<Holidays>(returnText);
+            var keys = root.Holiday.Keys;
+            foreach(var key in keys)
             {
+                HolidaysList.Add(key);
+            }
+            bool workdaybool;
+            for (int i=1;i<=days;i++)
+            {
+                string date_check= month.ToString().PadLeft(2, '0') + "-" + i.ToString().PadLeft(2, '0');
                 if (dt.DayOfWeek != DayOfWeek.Saturday && dt.DayOfWeek != DayOfWeek.Sunday)
                 {
-                    string url = @"http://timor.tech/api/holiday/info/";
-                    url += year.ToString() + "-" + month.ToString() + "-" + i.ToString().PadLeft(2, '0');
-                    string json = urltojson(url);
-                    var jsonDes = JsonConvert.DeserializeObject<WorkDay>(json);
-                    if (Convert.ToInt16(jsonDes.Type.Type) == 0)
+                    workdaybool = true;
+                    foreach(string date in HolidaysList)
+                    {
+                        if (date_check == date)
+                            workdaybool = false;
+                    }
+                    if(workdaybool==true)
+                    {
                         workdays++;
-
-                    /*                    
-                    WebClient client = new WebClient();
-                    client.Encoding = Encoding.UTF8;
-                    var jsondata=client.DownloadString(url);
-                    var model = JsonConvert.DeserializeObject<Types>(jsondata);//Newtonsoft.Json.JsonReaderException:“Unexpected character encountered while parsing value: {. Path 'type', line 1, position 18.”
-                    if (model.type == "0")
-                        workdays++;
-                    */
-                    /*
-                    WebRequest request = WebRequest.Create(url);
-                    WebResponse response = request.GetResponse();
-                    Stream webstream = response.GetResponseStream();
-                    StreamReader streamReader = new StreamReader(webstream);
-                    string json = streamReader.ReadToEnd();
-                    JObject jobj = JObject.Parse(json);
-                    JArray types = JArray.Parse(jobj["type"].ToString());
-                    if (types["type"].ToString() == "1")
-                        workdays++;
-                    */
-
-                    /*
-                    string url = "https://www.mxnzp.com/api/holiday/single/";
-                    url += year.ToString() + "-" + month.ToString() + "-" + i.ToString().PadLeft(2,'0');
-                    url += "ignoreHoliday=false&app_id=igsgjipmqtktwrmp&app_secret=a2plWmRqNSs2MUNseVlSYnJtTEdzZz09";
-                    WebRequest request = WebRequest.Create(url);
-                    WebResponse response = request.GetResponse();
-                    Stream webstream = response.GetResponseStream();
-                    StreamReader streamReader = new StreamReader(webstream);
-                    string json = streamReader.ReadToEnd();
-                    Newtonsoft.Json.Linq.JObject jobject = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(json);
-                    string typeDsc = jobject["date"]["typeDes"].ToString();     //System.NullReferenceException:“未将对象引用设置到对象的实例。”
-                    if (typeDsc == "工作日")
-                        workdays++;
-                    */
-                    /*
-                    WebRequest request = WebRequest.Create(url);
-                    WebResponse response = request.GetResponse();
-                    Stream webstream = response.GetResponseStream();
-                    StreamReader streamReader = new StreamReader(webstream);
-                    string json = streamReader.ReadToEnd();
-                    Newtonsoft.Json.Linq.JObject jobject = (Newtonsoft.Json.Linq.JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(json);
-                    */
-                    /*
-                    string holiday = jobject["holiday"].ToString();
-                    if(holiday==null
-                    /*
-                        workdays++;
-                    */
-                    /*
-                    decimal type_type = Convert.ToDecimal(jobject["type"]["type"]);
-                    if (type_type == 0)
-                        workdays++;
-                    */
-                    /*
-                    string type_type = jobject["type"]["type"].ToString();
-                    if (type_type == "0")
-                        workdays++;
-                    */
-
-                    /*
-                    JavaScriptSerializer workdays_json = new JavaScriptSerializer();
-                    JsonContent content = workdays_json.Deserialize<JsonContent>(url);
-                    if (content.holiday.holiday != true)
-                        workdays++;
-                    */
-
-                    /*
-                    WebRequest request = WebRequest.Create(url);
-                    WebResponse response = request.GetResponse();       //System.Net.WebException:“无法连接到远程服务器”
-                    Stream webstream = response.GetResponseStream();
-                    StreamReader streamReader = new StreamReader(webstream);
-                    string json = streamReader.ReadToEnd();
-                    JavaScriptSerializer workdays_Json = new JavaScriptSerializer();
-                    JsonContent Workdays_Content = workdays_Json.Deserialize<JsonContent>(json);
-                    */
-
-                    /*
-                    System.NullReferenceException:“未将对象引用设置到对象的实例。”
-
-                    BreakfastCards1.WebForm1.JsonContent.holiday.get 返回 null。
-                    */
-
-                    //if (Convert.ToInt16(Workdays_Content.type.type) == 0)
-                    //    workdays++;
-
-                    //if (Workdays_Content.type.type=='0')
-                    //    workdays++;
-
-
-                    /*
-                    WebRequest request = WebRequest.Create(url);
-                    WebResponse response = request.GetResponse();
-                    Stream webstream = response.GetResponseStream();
-                    StreamReader streamReader = new StreamReader(webstream);
-                    string json = streamReader.ReadToEnd();
-                    JavaScriptSerializer json1 = new JavaScriptSerializer();
-                    Dictionary<string, object> DicText = (Dictionary<string, object>)json1.DeserializeObject(json);
-
-                    if (DicText["type"] == 'Y')        //这个代码有问题，大括号/花括号的事，不知道怎么实现holiday!=true。
-                        workdays++;
-                    */
-
-
-
-
-                    //Types type = json1.Deserialize<Types>(json1);
-                    //if (type["type"] == 1)
-                    ;//    workdays++;
-                    //Dictionary<string, object> DicText = (Dictionary<string, object>)json1.DeserializeObject(json);
-                    //if (DicText["holiday"] == null )        //这个代码有问题，大括号/花括号的事，不知道怎么实现holiday!=true。
-                    //    workdays++;
-                    
-
-                    /*  周一至周五非节假日的Json格式例子：
-                    {"code":0,
-                    "type":{"type":0,"name":"周四","week":4},
-                    "holiday":null}
-                    */
-
-                    /*
-                    https://timor.tech/api/holiday/info/2022-09-12的Json格式例子
-                    { "code":0,"type":{ "type":2,"name":"中秋节","week":1},"holiday":{ "holiday":true,"name":"中秋节","wage":2,"date":"2022-09-12","rest":1} }
-                    */
+                        WorkdaysList.Add(date_check);
+                    }
                 }
                 dt = dt.AddDays(1);
             }            
