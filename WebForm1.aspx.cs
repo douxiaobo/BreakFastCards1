@@ -192,7 +192,7 @@ namespace BreakfastCards1
             //ID = "20220801";
 
             BreakfastCardsEntities db = new BreakfastCardsEntities();
-            var client = db.Table_FourName.FirstOrDefault(c => c.ID == ID);
+            var client = db.Table_FourName.FirstOrDefault(c => c.ID == ID); //System.Data.Entity.Core.EntityException:“The underlying provider failed on Open.”
 
             Dictionary<int, string> ActualBreakfast_Add_DigitToEng = new Dictionary<int, string>();
             ActualBreakfast_Add_DigitToEng.Add(1, "First");
@@ -262,7 +262,7 @@ namespace BreakfastCards1
             
         }
 
-        protected string urltojson(string url)
+        public string urltojson(string url)
         {
             WebClient webClient = new WebClient();
             webClient.Credentials = CredentialCache.DefaultCredentials;
@@ -471,43 +471,58 @@ namespace BreakfastCards1
             int workdays = 0;
             int days=DateTime.DaysInMonth(Convert.ToInt16(year), Convert.ToInt16(Month_EngToDigit(month)));
             DateTime dt = Convert.ToDateTime(year + "-" + month + "-" + 01.ToString());
-            string url = @"http://timor.tech/api/holiday/year/";
-            url += year.ToString() + "-" + month.ToString().PadLeft(2, '0');
-            string returnText = urltojson(url);
-            var root = JsonConvert.DeserializeObject<Holidays>(returnText);
-            var keys = root.Holiday.Keys;
-            foreach(var key in keys)
+            string jsonPath = @"C:\Users\a-xiaobodou\OneDrive - Microsoft\Projects\ASP.NET\BreakfastCards1\" + year + ".json";
+            HolidaysList.Clear();
+            WorkdaysList.Clear();
+            try
             {
-                HolidaysList.Add(key);
-            }
-            bool workdaybool;
-            for (int i=1;i<=days;i++)
-            {
-                string date_check= month.ToString().PadLeft(2, '0') + "-" + i.ToString().PadLeft(2, '0');
-                if (dt.DayOfWeek != DayOfWeek.Saturday && dt.DayOfWeek != DayOfWeek.Sunday)
+                System.IO.StreamReader sr = File.OpenText(jsonPath);    //System.IO.FileNotFoundException:“未能找到文件“C:\Program Files\IIS Express\2022json”。”
+                string json = sr.ReadToEnd();
+                var root = JsonConvert.DeserializeObject<Holidays>(json);
+                var keys = root.Holiday.Keys;
+                String Month_Digit = Month_EngToDigit(month).ToString().PadLeft(2, '0');
+                foreach (var key in keys)
                 {
-                    workdaybool = true;
-                    foreach(string date in HolidaysList)
+                    if(key.StartsWith(Month_Digit))
+                        HolidaysList.Add(key);
+                }                
+                bool workdaybool;
+                for (int i = 1; i <= days; i++)
+                {
+                    string date_check =Month_Digit + "-" + i.ToString().PadLeft(2, '0');
+                    if (dt.DayOfWeek != DayOfWeek.Saturday && dt.DayOfWeek != DayOfWeek.Sunday)
                     {
-                        if (date_check == date)
-                            workdaybool = false;
+                        workdaybool = true;
+                        foreach (string date in HolidaysList)
+                        {
+                            if (date_check == date)
+                            {
+                                workdaybool = false;
+                                break;
+                            }                                
+                        }
+                        if (workdaybool == true)
+                        {
+                            workdays++;
+                            WorkdaysList.Add(date_check);
+                        }
                     }
-                    if(workdaybool==true)
-                    {
-                        workdays++;
-                        WorkdaysList.Add(date_check);
-                    }
+                    dt = dt.AddDays(1);
                 }
-                dt = dt.AddDays(1);
-            }            
-            return workdays;
+                return workdays;
+            }
+            catch(System.IO.FileNotFoundException)
+            {
+                Label_Json.Text += "System.IO.FileNotFoundException!"+"<br/>";
+                return 0;
+            }
         }
 
         protected void Button_Json_Click(object sender, EventArgs e)
         {
             int days = DateTime.DaysInMonth(Convert.ToInt16(DropDownList_Json_Year.Text), Convert.ToInt16(Month_EngToDigit(DropDownList_Json_Month.Text)));
             int Workdays = workdays(DropDownList_Json_Year.Text, DropDownList_Json_Month.Text);
-            Label_Json.Text = "The Days of Month:" + days + "<br/>";
+            Label_Json.Text += "The Days of Month:" + days + "<br/>";
             Label_Json.Text += "The WorkDays of Month:" + Workdays.ToString() + "<br/>";
         }
 

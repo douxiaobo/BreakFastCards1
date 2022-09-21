@@ -5,6 +5,8 @@ VisualStudioVersion = 17.3.32811.315
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BreakfastCards1", "BreakfastCards1.csproj", "{5A019773-B906-4C82-BF31-84ECF90E85A7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BreakfastCards1Tests", "..\BreakfastCards1Tests\BreakfastCards1Tests.csproj", "{3CF625D2-C89E-4B69-A988-4BB005F63F8D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{5A019773-B906-4C82-BF31-84ECF90E85A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A019773-B906-4C82-BF31-84ECF90E85A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A019773-B906-4C82-BF31-84ECF90E85A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CF625D2-C89E-4B69-A988-4BB005F63F8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CF625D2-C89E-4B69-A988-4BB005F63F8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CF625D2-C89E-4B69-A988-4BB005F63F8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CF625D2-C89E-4B69-A988-4BB005F63F8D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
