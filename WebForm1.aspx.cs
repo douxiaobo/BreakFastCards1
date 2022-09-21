@@ -38,12 +38,13 @@ namespace BreakfastCards1
             if (!IsPostBack)
             {
                 BindYear();                                             //年份
-                BindMonth();                                            //月份
+                BindMonth();                                           //月份
                 BindGroupName();                                        //
                 BindActualBreakfast_AddCards();                         //
                 BindActualBreakfast_Add_CheckboxList();                 //
                 GridView1.DataBind();
             }
+            
             /*
             string url = @"http://timor.tech/api/holiday/info/2022-09-01";
             WebRequest request = WebRequest.Create(url);
@@ -90,7 +91,7 @@ namespace BreakfastCards1
             DropDownList_Add_Month.Items.Clear();
             DropDownList_Delete_Month.Items.Clear();
             DropDownList_Inquiry_Month.Items.Clear();
-            //DropDownList_Json_Month.Items.Clear();
+            DropDownList_Json_Month.Items.Clear();
             DropDownList_Revise_Month.Items.Clear();
 
             DropDownList_Inquiry_Month.Items.Add("Never Choose");
@@ -118,7 +119,7 @@ namespace BreakfastCards1
                 DropDownList_Add_Month.Items.Add(Month_DigitToEng[i]);
                 DropDownList_Delete_Month.Items.Add(Month_DigitToEng[i]);
                 DropDownList_Inquiry_Month.Items.Add(Month_DigitToEng[i]);
-                //DropDownList_Json_Month.Items.Add(Month_DigitToEng[i]);
+                DropDownList_Json_Month.Items.Add(Month_DigitToEng[i]);
                 DropDownList_Revise_Month.Items.Add(Month_DigitToEng[i]);
             }
             for(int i=1;i<Convert.ToInt16(ThisMonth)-1;i++)
@@ -128,7 +129,7 @@ namespace BreakfastCards1
                 DropDownList_Add_Month.Items.Add(Month_DigitToEng[i]);
                 DropDownList_Delete_Month.Items.Add(Month_DigitToEng[i]);
                 DropDownList_Inquiry_Month.Items.Add(Month_DigitToEng[i]);
-                //DropDownList_Json_Month.Items.Add(Month_DigitToEng[i]);
+                DropDownList_Json_Month.Items.Add(Month_DigitToEng[i]);
                 DropDownList_Revise_Month.Items.Add(Month_DigitToEng[i]);
             }
 
@@ -255,10 +256,6 @@ namespace BreakfastCards1
                     else if(i>4)
                         CheckBoxList_ActualBreakfast_Add.RepeatColumns = 5;
                     */
-                    
-
-                    
-                    
                 }
                 dt = dt.AddDays(1);
             }
@@ -270,7 +267,8 @@ namespace BreakfastCards1
             WebClient webClient = new WebClient();
             webClient.Credentials = CredentialCache.DefaultCredentials;
             webClient.Encoding = Encoding.UTF8;
-            return (string)webClient.DownloadString(url);
+            string json= webClient.DownloadString(url);     //System.Net.WebException:“远程服务器返回错误: (429) Too Many Requests。”
+            return json;
         }
 
         protected void Button_Add_Comfirm_Click(object sender, EventArgs e)
@@ -508,8 +506,9 @@ namespace BreakfastCards1
         protected void Button_Json_Click(object sender, EventArgs e)
         {
             int days = DateTime.DaysInMonth(Convert.ToInt16(DropDownList_Json_Year.Text), Convert.ToInt16(Month_EngToDigit(DropDownList_Json_Month.Text)));
+            int Workdays = workdays(DropDownList_Json_Year.Text, DropDownList_Json_Month.Text);
             Label_Json.Text = "The Days of Month:" + days + "<br/>";
-            Label_Json.Text += "The WorkDays of Month:" + workdays(DropDownList_Json_Year.Text,DropDownList_Json_Month.Text) + "<br/>";
+            Label_Json.Text += "The WorkDays of Month:" + Workdays.ToString() + "<br/>";
         }
 
         protected void DropDownList_ActualBreakfast_AddYear_SelectedIndexChanged(object sender, EventArgs e)
