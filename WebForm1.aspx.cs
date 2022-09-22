@@ -86,6 +86,7 @@ namespace BreakfastCards1
 
         protected void BindMonth()
         {
+            
             DropDownList_ActualBreakfast_AddMonth.Items.Clear();
             DropDownList_ActualBreakfast_InquiryMonth.Items.Clear();
             DropDownList_Add_Month.Items.Clear();
@@ -94,7 +95,7 @@ namespace BreakfastCards1
             DropDownList_Json_Month.Items.Clear();
             DropDownList_Revise_Month.Items.Clear();
 
-            DropDownList_Inquiry_Month.Items.Add("Never Choose");
+            DropDownList_Inquiry_Month.Items.Add("NeverChoose");
 
             //Month月份
             Dictionary<int, string> Month_DigitToEng = new Dictionary<int, string>();
@@ -132,7 +133,7 @@ namespace BreakfastCards1
                 DropDownList_Json_Month.Items.Add(Month_DigitToEng[i]);
                 DropDownList_Revise_Month.Items.Add(Month_DigitToEng[i]);
             }
-
+            
             /*
             Dictionary<int, string>.ValueCollection MonthCol = Month_DigitToEng.Values;
             foreach (string value in MonthCol)
@@ -227,48 +228,18 @@ namespace BreakfastCards1
         }
 
         protected void BindActualBreakfast_Add_CheckboxList()
-        {
+        {            
             CheckBoxList_ActualBreakfast_Add.Items.Clear();
-            int year = Convert.ToInt16(DropDownList_ActualBreakfast_AddYear.Text);
-
-            int month = Convert.ToInt16(Month_EngToDigit(DropDownList_ActualBreakfast_AddMonth.Text));
-
-            int days = DateTime.DaysInMonth(year, month);
-
-            DateTime dt = Convert.ToDateTime(DropDownList_ActualBreakfast_AddYear.Text + "-" + DropDownList_ActualBreakfast_AddMonth.Text + "-" + 01.ToString());
             
-            for (int i = 1; i <= days; i++) // 问题出在这里，这里重复了多次去触发下文的request
+
+            int workdays_Breakfast_Add = workdays(DropDownList_ActualBreakfast_AddYear.Text.ToString(), DropDownList_ActualBreakfast_AddMonth.Text.ToString());
+
+            CheckBoxList_ActualBreakfast_Add.RepeatColumns = 5;
+
+            foreach(string workday in WorkdaysList)
             {
-                //我遇到一个棘手的问题，在CheckBoxList控件里，遇到周五之后，都要换行，不知道怎么解决。间隔距离，不知道怎么解决。
-                if (dt.DayOfWeek != DayOfWeek.Saturday && dt.DayOfWeek != DayOfWeek.Sunday) 
-                {
-                    /*
-                    if ((i == 1 && dt.DayOfWeek == DayOfWeek.Friday) || (i == 4 && dt.DayOfWeek == DayOfWeek.Monday))
-                        CheckBoxList_ActualBreakfast_Add.RepeatColumns = 1;
-                    else if ((i == 1 && dt.DayOfWeek == DayOfWeek.Thursday) || (i == 2 && dt.DayOfWeek == DayOfWeek.Friday) || (i == 5 && dt.DayOfWeek == DayOfWeek.Monday))
-                        CheckBoxList_ActualBreakfast_Add.RepeatColumns = 2;
-                    else if (i == 1 && dt.DayOfWeek == DayOfWeek.Wednesday)
-                        CheckBoxList_ActualBreakfast_Add.RepeatColumns = 3;
-                    else if (i == 1 && dt.DayOfWeek == DayOfWeek.Tuesday)
-                        CheckBoxList_ActualBreakfast_Add.RepeatColumns = 4;
-                    else if ((i == 1 && dt.DayOfWeek == DayOfWeek.Monday) || (i == 4 && dt.DayOfWeek == DayOfWeek.Thursday))
-                        CheckBoxList_ActualBreakfast_Add.RepeatColumns = 5;
-                    else if(i>4)
-                        CheckBoxList_ActualBreakfast_Add.RepeatColumns = 5;
-                    */
-                }
-                dt = dt.AddDays(1);
-            }
-            
-        }
-
-        public string urltojson(string url)
-        {
-            WebClient webClient = new WebClient();
-            webClient.Credentials = CredentialCache.DefaultCredentials;
-            webClient.Encoding = Encoding.UTF8;
-            string json= webClient.DownloadString(url);     //System.Net.WebException:“远程服务器返回错误: (429) Too Many Requests。”
-            return json;
+                CheckBoxList_ActualBreakfast_Add.Items.Add(workday);
+            }            
         }
 
         protected void Button_Add_Comfirm_Click(object sender, EventArgs e)
@@ -344,7 +315,7 @@ namespace BreakfastCards1
 
         protected string Month_EngToDigit(string month)
         {
-            Dictionary<string, string> Month_EngToDigit = new Dictionary<string, string>();
+            Dictionary<string, string> Month_EngToDigit = new Dictionary<string, string>();            
             Month_EngToDigit.Add("January", "01");
             Month_EngToDigit.Add("February", "02");
             Month_EngToDigit.Add("March", "03");
@@ -549,7 +520,7 @@ namespace BreakfastCards1
             BindActualBreakfast_Add_CheckboxList();            
         }
 
-        protected void Button_Actual_Breakfast_CheckBoxList_Add(object sender, EventArgs e)
+        protected void Button_Actual_Breakfast_CheckBoxList_Add(object sender, EventArgs e)     //没有检查
         {
             BreakfastCardsEntities db = new BreakfastCardsEntities();
 
@@ -610,7 +581,7 @@ namespace BreakfastCards1
             Response.Redirect(Request.Url.ToString());
         }
 
-        protected void FullAttendanceAndLostCard_ActualQuantity()
+        protected void FullAttendanceAndLostCard_ActualQuantity()       //可能正确
         {
             BreakfastCardsEntities db = new BreakfastCardsEntities();
             String year = DropDownList_ActualBreakfast_AddYear.SelectedValue;
@@ -636,35 +607,32 @@ namespace BreakfastCards1
             {
                 a.LostCard_Boolean = "False";
             }
-            int workday = workdays(year, month);
+            int workday = workdays(DropDownList_ActualBreakfast_AddYear.SelectedValue, DropDownList_ActualBreakfast_AddMonth.SelectedValue);
             a.ActualQuantity = workday;
             db.Table_ActualQuantity.Add(a);
             db.SaveChanges();
             Response.Redirect(Request.Url.ToString());
         }
 
-        protected void FullAttendanceAndLostCard_BreakfastBoolean() 
-        {
-            BreakfastCardsEntities db = new BreakfastCardsEntities();
-
-            String year = DropDownList_ActualBreakfast_AddYear.SelectedValue;
-            String month = Month_EngToDigit(DropDownList_ActualBreakfast_AddMonth.SelectedValue);
-            String groupname = GroupName_Num(DropDownList_ActualBreakfast_AddGroupName.SelectedValue);
-            String cards = EngOrderToDigit(DropDownList_ActualBreakfast_AddCards.SelectedValue);
-
-            int actualquantity = 0;
-
+        protected void FullAttendanceAndLostCard_BreakfastBoolean()                 //增加不了数据库，怎么办？
+        {          
             foreach (ListItem item in CheckBoxList_ActualBreakfast_Add.Items)       //代码有问题。
             {
+                BreakfastCardsEntities db = new BreakfastCardsEntities();
+                String year = DropDownList_ActualBreakfast_AddYear.SelectedValue;
+                String month = Month_EngToDigit(DropDownList_ActualBreakfast_AddMonth.SelectedValue);
+                String groupname = GroupName_Num(DropDownList_ActualBreakfast_AddGroupName.SelectedValue);
+                String cards = EngOrderToDigit(DropDownList_ActualBreakfast_AddCards.SelectedValue);
+
                 Table_BreakfastBoolean b = new Table_BreakfastBoolean();
+
                 //在Table_BreakfastBoolean里，ID的规则，顺序分别：4位是年份，2位是月份，2位是团队代号，2位是卡号顺序，2位是日期
-                b.ID = year + month + groupname + cards + item.Text.Substring(8);
+                b.ID = year + month + groupname + cards + item.Text.Substring(4);//检查item问题
                 b.Year = year;
                 b.Month = DropDownList_ActualBreakfast_AddMonth.SelectedValue;
                 b.GroupName = DropDownList_ActualBreakfast_AddGroupName.SelectedValue;
                 b.Cards = DropDownList_ActualBreakfast_AddCards.SelectedValue;
-                b.Data = item.Text.Substring(8);
-                actualquantity++;
+                b.Data = item.Text.Substring(4);
                 if (LostCard_bool == true)
                 {
                     b.Breakfast_Boolean = "Null";
@@ -674,15 +642,18 @@ namespace BreakfastCards1
                     b.Breakfast_Boolean = "True";
                 }
                 db.Table_BreakfastBoolean.Add(b);
-                db.SaveChanges();
-                Response.Redirect(Request.Url.ToString());
+                int t = db.SaveChanges(); 
+                
             }
+            
+            Response.Redirect(Request.Url.ToString());// 这个要在外面，否则执行了第一个之后就中断了
+
         }
 
         protected void Button_FullAttendance_Click(object sender, EventArgs e)
         {
             LostCard_bool = false;
-            FullAttendanceAndLostCard_ActualQuantity() ;
+            //FullAttendanceAndLostCard_ActualQuantity() ;
             FullAttendanceAndLostCard_BreakfastBoolean();
         }
 

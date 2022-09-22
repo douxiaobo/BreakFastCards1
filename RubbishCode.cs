@@ -155,6 +155,32 @@ namespace BreakfastCards1
                 return strBuff;
                 
 }
-          */          
+          */
+
+
+        /*
+for (int i = 1; i <= days; i++) // 问题出在这里，这里重复了多次去触发下文的request
+{
+    //我遇到一个棘手的问题，在CheckBoxList控件里，遇到周五之后，都要换行，不知道怎么解决。间隔距离，不知道怎么解决。
+    if (dt.DayOfWeek != DayOfWeek.Saturday && dt.DayOfWeek != DayOfWeek.Sunday) 
+    {
+
+        if ((i == 1 && dt.DayOfWeek == DayOfWeek.Friday) || (i == 4 && dt.DayOfWeek == DayOfWeek.Monday))
+            CheckBoxList_ActualBreakfast_Add.RepeatColumns = 1;
+        else if ((i == 1 && dt.DayOfWeek == DayOfWeek.Thursday) || (i == 2 && dt.DayOfWeek == DayOfWeek.Friday) || (i == 5 && dt.DayOfWeek == DayOfWeek.Monday))
+            CheckBoxList_ActualBreakfast_Add.RepeatColumns = 2;
+        else if (i == 1 && dt.DayOfWeek == DayOfWeek.Wednesday)
+            CheckBoxList_ActualBreakfast_Add.RepeatColumns = 3;
+        else if (i == 1 && dt.DayOfWeek == DayOfWeek.Tuesday)
+            CheckBoxList_ActualBreakfast_Add.RepeatColumns = 4;
+        else if ((i == 1 && dt.DayOfWeek == DayOfWeek.Monday) || (i == 4 && dt.DayOfWeek == DayOfWeek.Thursday))
+            CheckBoxList_ActualBreakfast_Add.RepeatColumns = 5;
+        else if(i>4)
+            CheckBoxList_ActualBreakfast_Add.RepeatColumns = 5;
+
+    }
+    dt = dt.AddDays(1);
+}*/
+
     }
 }
