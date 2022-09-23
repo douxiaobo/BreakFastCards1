@@ -592,7 +592,7 @@ namespace BreakfastCards1
             Table_ActualQuantity a = new Table_ActualQuantity();
 
             //在Table_ActualQuantity里，ID的规则，顺序分别：4位年份，2位月份，2位团队代码，2位卡号顺序。
-            a.ID = year + month + groupname + cards;
+            
 
             a.Year = year;
             a.Month = DropDownList_ActualBreakfast_AddMonth.SelectedValue;
@@ -602,20 +602,61 @@ namespace BreakfastCards1
             if (LostCard_bool == true)
             {
                 a.LostCard_Boolean = "True";
+                a.ID = year + month + groupname + cards + "T";
             }
             else
             {
                 a.LostCard_Boolean = "False";
+                a.ID = year + month + groupname + cards+"F";
             }
             int workday = workdays(DropDownList_ActualBreakfast_AddYear.SelectedValue, DropDownList_ActualBreakfast_AddMonth.SelectedValue);
             a.ActualQuantity = workday;
+
+            foreach (ListItem item in CheckBoxList_ActualBreakfast_Add.Items)       //代码有问题。
+            {
+                //BreakfastCardsEntities db1 = new BreakfastCardsEntities();
+
+                Table_BreakfastBoolean b = new Table_BreakfastBoolean();
+
+                //在Table_BreakfastBoolean里，ID的规则，顺序分别：4位是年份，2位是月份，2位是团队代号，2位是卡号顺序，2位是日期
+
+                b.Year = year;
+                b.Month = DropDownList_ActualBreakfast_AddMonth.SelectedValue;
+                b.GroupName = DropDownList_ActualBreakfast_AddGroupName.SelectedValue;
+                b.Cards = DropDownList_ActualBreakfast_AddCards.SelectedValue;
+                b.Data = item.Text.Substring(3);
+                if (LostCard_bool == true)
+                {
+                    b.Breakfast_Boolean = "Null";
+                    b.ID = year + month + groupname + cards + item.Text.Substring(3) + "Y";
+                }
+                else
+                {
+                    b.Breakfast_Boolean = "True";
+                    b.ID = year + month + groupname + cards + item.Text.Substring(3) + "N";
+                }
+                db.Table_BreakfastBoolean.Add(b);
+                int t = db.SaveChanges();
+                //System.Data.Entity.Infrastructure.DbUpdateException:“An error occurred while updating the entries. See the inner exception for details.”
+                //UpdateException: An error occurred while updating the entries. See the inner exception for details.
+                //SqlException: Violation of PRIMARY KEY constraint 'PK_Table_Breakfast'. Cannot insert duplicate key in object 'dbo.Table_BreakfastBoolean'. The duplicate key value is (202208030101). The statement has been terminated.
+            }
+
             db.Table_ActualQuantity.Add(a);
             db.SaveChanges();
             Response.Redirect(Request.Url.ToString());
         }
 
         protected void FullAttendanceAndLostCard_BreakfastBoolean()                 //增加不了数据库，怎么办？
-        {          
+        {
+            /*
+            
+            foreach (ListItem item in CheckBoxList_ActualBreakfast_Add.Items)
+            {
+                Label_Json.Text += item.Text.Substring(3) + "<br/>";
+            }
+            */
+            int workday = workdays(DropDownList_ActualBreakfast_AddYear.SelectedValue, DropDownList_ActualBreakfast_AddMonth.SelectedValue);
             foreach (ListItem item in CheckBoxList_ActualBreakfast_Add.Items)       //代码有问题。
             {
                 BreakfastCardsEntities db = new BreakfastCardsEntities();
@@ -627,34 +668,38 @@ namespace BreakfastCards1
                 Table_BreakfastBoolean b = new Table_BreakfastBoolean();
 
                 //在Table_BreakfastBoolean里，ID的规则，顺序分别：4位是年份，2位是月份，2位是团队代号，2位是卡号顺序，2位是日期
-                b.ID = year + month + groupname + cards + item.Text.Substring(4);//检查item问题
+                
                 b.Year = year;
                 b.Month = DropDownList_ActualBreakfast_AddMonth.SelectedValue;
                 b.GroupName = DropDownList_ActualBreakfast_AddGroupName.SelectedValue;
                 b.Cards = DropDownList_ActualBreakfast_AddCards.SelectedValue;
-                b.Data = item.Text.Substring(4);
+                b.Data = item.Text.Substring(3);
                 if (LostCard_bool == true)
                 {
                     b.Breakfast_Boolean = "Null";
+                    b.ID = year + month + groupname + cards + item.Text.Substring(3)+"Y";
                 }
                 else
                 {
                     b.Breakfast_Boolean = "True";
+                    b.ID = year + month + groupname + cards + item.Text.Substring(3)+"N";
                 }
                 db.Table_BreakfastBoolean.Add(b);
-                int t = db.SaveChanges(); 
-                
+                int t = db.SaveChanges();
+                //System.Data.Entity.Infrastructure.DbUpdateException:“An error occurred while updating the entries. See the inner exception for details.”
+                //UpdateException: An error occurred while updating the entries. See the inner exception for details.
+                //SqlException: Violation of PRIMARY KEY constraint 'PK_Table_Breakfast'. Cannot insert duplicate key in object 'dbo.Table_BreakfastBoolean'. The duplicate key value is (202208030101). The statement has been terminated.
             }
-            
-            Response.Redirect(Request.Url.ToString());// 这个要在外面，否则执行了第一个之后就中断了
 
+            Response.Redirect(Request.Url.ToString());// 这个要在外面，否则执行了第一个之后就中断了
+            
         }
 
         protected void Button_FullAttendance_Click(object sender, EventArgs e)
         {
             LostCard_bool = false;
-            //FullAttendanceAndLostCard_ActualQuantity() ;
-            FullAttendanceAndLostCard_BreakfastBoolean();
+            FullAttendanceAndLostCard_ActualQuantity() ;
+            //FullAttendanceAndLostCard_BreakfastBoolean();
         }
 
         protected void Button_LostCard_Click(object sender, EventArgs e)
