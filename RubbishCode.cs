@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.UI.WebControls;
 
 namespace BreakfastCards1
 {
@@ -181,6 +182,55 @@ for (int i = 1; i <= days; i++) // 问题出在这里，这里重复了多次去
     }
     dt = dt.AddDays(1);
 }*/
+        /*
+        protected void FullAttendanceAndLostCard_BreakfastBoolean()                 //增加不了数据库，怎么办？
+        {
+            
+            
+            foreach (ListItem item in CheckBoxList_ActualBreakfast_Add.Items)
+            {
+                Label_Json.Text += item.Text.Substring(3) + "<br/>";
+            }
+            
+            int workday = workdays(DropDownList_ActualBreakfast_AddYear.SelectedValue, DropDownList_ActualBreakfast_AddMonth.SelectedValue);
+            foreach (ListItem item in CheckBoxList_ActualBreakfast_Add.Items)       //代码有问题。
+            {
+                BreakfastCardsEntities db = new BreakfastCardsEntities();
+                String year = DropDownList_ActualBreakfast_AddYear.SelectedValue;
+                String month = Month_EngToDigit(DropDownList_ActualBreakfast_AddMonth.SelectedValue);
+                String groupname = GroupName_Num(DropDownList_ActualBreakfast_AddGroupName.SelectedValue);
+                String cards = EngOrderToDigit(DropDownList_ActualBreakfast_AddCards.SelectedValue);
+
+                Table_BreakfastBoolean b = new Table_BreakfastBoolean();
+
+                //在Table_BreakfastBoolean里，ID的规则，顺序分别：4位是年份，2位是月份，2位是团队代号，2位是卡号顺序，2位是日期
+
+                b.Year = year;
+                b.Month = DropDownList_ActualBreakfast_AddMonth.SelectedValue;
+                b.GroupName = DropDownList_ActualBreakfast_AddGroupName.SelectedValue;
+                b.Cards = DropDownList_ActualBreakfast_AddCards.SelectedValue;
+                b.Data = item.Text.Substring(3);
+                if (LostCard_bool == true)
+                {
+                    b.Breakfast_Boolean = "Null";
+                    b.ID = year + month + groupname + cards + item.Text.Substring(3) + "Y";
+                }
+                else
+                {
+                    b.Breakfast_Boolean = "True";
+                    b.ID = year + month + groupname + cards + item.Text.Substring(3) + "N";
+                }
+                db.Table_BreakfastBoolean.Add(b);
+                int t = db.SaveChanges();
+                //System.Data.Entity.Infrastructure.DbUpdateException:“An error occurred while updating the entries. See the inner exception for details.”
+                //UpdateException: An error occurred while updating the entries. See the inner exception for details.
+                //SqlException: Violation of PRIMARY KEY constraint 'PK_Table_Breakfast'. Cannot insert duplicate key in object 'dbo.Table_BreakfastBoolean'. The duplicate key value is (202208030101). The statement has been terminated.
+            }
+
+            Response.Redirect(Request.Url.ToString());// 这个要在外面，否则执行了第一个之后就中断了
+
+        }
+        */
 
     }
 }

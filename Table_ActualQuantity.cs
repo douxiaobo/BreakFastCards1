@@ -21,5 +21,6 @@ namespace BreakfastCards1
         public string Cards { get; set; }
         public Nullable<int> ActualQuantity { get; set; }
         public string LostCard_Boolean { get; set; }
+        public Nullable<int> Workdays { get; set; }
     }
 }

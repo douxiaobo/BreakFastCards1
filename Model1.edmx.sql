@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 09/06/2022 13:12:39
+-- Date Created: 09/26/2022 12:59:43
 -- Generated from EDMX file: C:\Users\a-xiaobodou\OneDrive - Microsoft\Projects\ASP.NET\BreakfastCards1\Model1.edmx
 -- --------------------------------------------------
 
@@ -44,7 +44,8 @@ CREATE TABLE [dbo].[Table_ActualQuantity] (
     [GroupName] nchar(10)  NULL,
     [Cards] nchar(10)  NULL,
     [ActualQuantity] int  NULL,
-    [LostCard_Boolean] nchar(10)  NULL
+    [LostCard_Boolean] nchar(10)  NULL,
+    [Workdays] int  NULL
 );
 GO
 

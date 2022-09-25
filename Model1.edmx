@@ -16,6 +16,7 @@
           <Property Name="Cards" Type="nchar" MaxLength="10" />
           <Property Name="ActualQuantity" Type="int" />
           <Property Name="LostCard_Boolean" Type="nchar" MaxLength="10" />
+          <Property Name="Workdays" Type="int" />
         </EntityType>
         <EntityType Name="Table_BreakfastBoolean">
           <Key>
@@ -59,6 +60,7 @@
           <Property Name="Cards" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
           <Property Name="ActualQuantity" Type="Int32" />
           <Property Name="LostCard_Boolean" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Workdays" Type="Int32" />
         </EntityType>
         <EntityType Name="Table_BreakfastBoolean">
           <Key>
@@ -103,6 +105,7 @@
           <ScalarProperty Name="Cards" ColumnName="Cards" />
           <ScalarProperty Name="ActualQuantity" ColumnName="ActualQuantity" />
           <ScalarProperty Name="LostCard_Boolean" ColumnName="LostCard_Boolean" />
+          <ScalarProperty Name="Workdays" ColumnName="Workdays" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

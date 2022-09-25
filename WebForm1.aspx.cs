@@ -517,6 +517,7 @@ namespace BreakfastCards1
         
         protected void DropDownList_ActualBreakfast_AddCards_SelectedIndexChanged(object sender, EventArgs e)
         {
+            BindActualBreakfast_AddCards();
             BindActualBreakfast_Add_CheckboxList();            
         }
 
@@ -527,53 +528,44 @@ namespace BreakfastCards1
             String year = DropDownList_ActualBreakfast_AddYear.SelectedValue;
             String month = Month_EngToDigit(DropDownList_ActualBreakfast_AddMonth.SelectedValue);
             String groupname=GroupName_Num(DropDownList_ActualBreakfast_AddGroupName.SelectedValue);
-
             String cards = EngOrderToDigit(DropDownList_ActualBreakfast_AddCards.SelectedValue);
 
             int actualquantity = 0;
 
-            Table_ActualQuantity a = new Table_ActualQuantity();            
+            Table_ActualQuantity a = new Table_ActualQuantity();
 
-            //在Table_ActualQuantity里，ID的规则，顺序分别：4位年份，2位月份，2位团队代码，2位卡号顺序。
-            a.ID= year + month + groupname + cards;
-
+            //在Table_ActualQuantity里，ID的规则，顺序分别：4位年份，2位月份，2位团队代码，2位卡号顺序，1位是否丢失卡的符号。
+            a.ID = year + month + groupname + cards + "F";
             a.Year = year;
             a.Month = DropDownList_ActualBreakfast_AddMonth.SelectedValue;
             a.GroupName = DropDownList_ActualBreakfast_AddGroupName.SelectedValue;
             a.Cards = DropDownList_ActualBreakfast_AddCards.SelectedValue;
-
-            Table_BreakfastBoolean b = new Table_BreakfastBoolean();
+            a.Workdays = workdays(DropDownList_ActualBreakfast_AddYear.SelectedValue, DropDownList_ActualBreakfast_AddMonth.SelectedValue);
+            a.LostCard_Boolean = "False";
 
             foreach (ListItem item in CheckBoxList_ActualBreakfast_Add.Items)       //代码有问题。
-            {       
-                //在Table_BreakfastBoolean里，ID的规则，顺序分别：4位是年份，2位是月份，2位是团队代号，2位是卡号顺序，2位是日期
-                b.ID = year + month + groupname + cards+ item.Text.Substring(8);
+            {
+                Table_BreakfastBoolean b = new Table_BreakfastBoolean();
+                
                 b.Year = year;
                 b.Month = DropDownList_ActualBreakfast_AddMonth.SelectedValue;
                 b.GroupName=DropDownList_ActualBreakfast_AddGroupName.SelectedValue;
                 b.Cards = DropDownList_ActualBreakfast_AddCards.SelectedValue;
-                b.Data = item.Text.Substring(8);
+                b.Data = item.Text;
                 if(item.Selected)
                 {
                     actualquantity++;
                     b.Breakfast_Boolean = "True";
-
+                    //在Table_BreakfastBoolean里，ID的规则，顺序分别：4位是年份，2位是月份，2位是团队代号，2位是卡号顺序，2位是日期
+                    b.ID = year + month + groupname + cards + item.Text.Substring(3)+"T";
                 }
                 else
                 {
                     b.Breakfast_Boolean = "False";
+                    b.ID = year + month + groupname + cards + item.Text.Substring(3) + "F";
                 }
-                try
-                {
-                    db.Table_BreakfastBoolean.Add(b);
-                    //db.SaveChanges();                               //失败，不知道怎么解决。
-                    //Response.Redirect(Request.Url.ToString());
-                }
-                catch(System.Data.Entity.Infrastructure.DbUpdateException)
-                {
-                    Label_Json.Text = "Sorry_ActualBreakfast_Add";
-                }
-                
+                db.Table_BreakfastBoolean.Add(b);
+                db.SaveChanges();                
             }
             a.ActualQuantity = actualquantity;
             db.Table_ActualQuantity.Add(a);
@@ -581,9 +573,10 @@ namespace BreakfastCards1
             Response.Redirect(Request.Url.ToString());
         }
 
-        protected void FullAttendanceAndLostCard_ActualQuantity()       //可能正确
+        protected void FullAttendanceAndLostCard()       //可能正确
         {
             BreakfastCardsEntities db = new BreakfastCardsEntities();
+
             String year = DropDownList_ActualBreakfast_AddYear.SelectedValue;
             String month = Month_EngToDigit(DropDownList_ActualBreakfast_AddMonth.SelectedValue); 
             String groupname = GroupName_Num(DropDownList_ActualBreakfast_AddGroupName.SelectedValue);
@@ -591,9 +584,8 @@ namespace BreakfastCards1
 
             Table_ActualQuantity a = new Table_ActualQuantity();
 
-            //在Table_ActualQuantity里，ID的规则，顺序分别：4位年份，2位月份，2位团队代码，2位卡号顺序。
+            //在Table_ActualQuantity里，ID的规则，顺序分别：4位年份，2位月份，2位团队代码，2位卡号顺序,1位是否丢失卡的符号。
             
-
             a.Year = year;
             a.Month = DropDownList_ActualBreakfast_AddMonth.SelectedValue;
             a.GroupName = DropDownList_ActualBreakfast_AddGroupName.SelectedValue;
@@ -611,29 +603,27 @@ namespace BreakfastCards1
             }
             int workday = workdays(DropDownList_ActualBreakfast_AddYear.SelectedValue, DropDownList_ActualBreakfast_AddMonth.SelectedValue);
             a.ActualQuantity = workday;
+            a.Workdays = workday;
 
             foreach (ListItem item in CheckBoxList_ActualBreakfast_Add.Items)       //代码有问题。
             {
-                //BreakfastCardsEntities db1 = new BreakfastCardsEntities();
-
-                Table_BreakfastBoolean b = new Table_BreakfastBoolean();
-
-                //在Table_BreakfastBoolean里，ID的规则，顺序分别：4位是年份，2位是月份，2位是团队代号，2位是卡号顺序，2位是日期
+                Table_BreakfastBoolean b = new Table_BreakfastBoolean();                
 
                 b.Year = year;
                 b.Month = DropDownList_ActualBreakfast_AddMonth.SelectedValue;
                 b.GroupName = DropDownList_ActualBreakfast_AddGroupName.SelectedValue;
                 b.Cards = DropDownList_ActualBreakfast_AddCards.SelectedValue;
-                b.Data = item.Text.Substring(3);
+                b.Data = item.Text;
                 if (LostCard_bool == true)
                 {
-                    b.Breakfast_Boolean = "Null";
-                    b.ID = year + month + groupname + cards + item.Text.Substring(3) + "Y";
+                    b.Breakfast_Boolean = "Lost";
+                    //在Table_BreakfastBoolean里，ID的规则，顺序分别：4位是年份，2位是月份，2位是团队代号，2位是卡号顺序，2位是日期
+                    b.ID = year + month + groupname + cards + item.Text.Substring(3) + "L";
                 }
                 else
                 {
                     b.Breakfast_Boolean = "True";
-                    b.ID = year + month + groupname + cards + item.Text.Substring(3) + "N";
+                    b.ID = year + month + groupname + cards + item.Text.Substring(3) + "T";
                 }
                 db.Table_BreakfastBoolean.Add(b);
                 int t = db.SaveChanges();
@@ -641,72 +631,21 @@ namespace BreakfastCards1
                 //UpdateException: An error occurred while updating the entries. See the inner exception for details.
                 //SqlException: Violation of PRIMARY KEY constraint 'PK_Table_Breakfast'. Cannot insert duplicate key in object 'dbo.Table_BreakfastBoolean'. The duplicate key value is (202208030101). The statement has been terminated.
             }
-
             db.Table_ActualQuantity.Add(a);
             db.SaveChanges();
             Response.Redirect(Request.Url.ToString());
-        }
-
-        protected void FullAttendanceAndLostCard_BreakfastBoolean()                 //增加不了数据库，怎么办？
-        {
-            /*
-            
-            foreach (ListItem item in CheckBoxList_ActualBreakfast_Add.Items)
-            {
-                Label_Json.Text += item.Text.Substring(3) + "<br/>";
-            }
-            */
-            int workday = workdays(DropDownList_ActualBreakfast_AddYear.SelectedValue, DropDownList_ActualBreakfast_AddMonth.SelectedValue);
-            foreach (ListItem item in CheckBoxList_ActualBreakfast_Add.Items)       //代码有问题。
-            {
-                BreakfastCardsEntities db = new BreakfastCardsEntities();
-                String year = DropDownList_ActualBreakfast_AddYear.SelectedValue;
-                String month = Month_EngToDigit(DropDownList_ActualBreakfast_AddMonth.SelectedValue);
-                String groupname = GroupName_Num(DropDownList_ActualBreakfast_AddGroupName.SelectedValue);
-                String cards = EngOrderToDigit(DropDownList_ActualBreakfast_AddCards.SelectedValue);
-
-                Table_BreakfastBoolean b = new Table_BreakfastBoolean();
-
-                //在Table_BreakfastBoolean里，ID的规则，顺序分别：4位是年份，2位是月份，2位是团队代号，2位是卡号顺序，2位是日期
-                
-                b.Year = year;
-                b.Month = DropDownList_ActualBreakfast_AddMonth.SelectedValue;
-                b.GroupName = DropDownList_ActualBreakfast_AddGroupName.SelectedValue;
-                b.Cards = DropDownList_ActualBreakfast_AddCards.SelectedValue;
-                b.Data = item.Text.Substring(3);
-                if (LostCard_bool == true)
-                {
-                    b.Breakfast_Boolean = "Null";
-                    b.ID = year + month + groupname + cards + item.Text.Substring(3)+"Y";
-                }
-                else
-                {
-                    b.Breakfast_Boolean = "True";
-                    b.ID = year + month + groupname + cards + item.Text.Substring(3)+"N";
-                }
-                db.Table_BreakfastBoolean.Add(b);
-                int t = db.SaveChanges();
-                //System.Data.Entity.Infrastructure.DbUpdateException:“An error occurred while updating the entries. See the inner exception for details.”
-                //UpdateException: An error occurred while updating the entries. See the inner exception for details.
-                //SqlException: Violation of PRIMARY KEY constraint 'PK_Table_Breakfast'. Cannot insert duplicate key in object 'dbo.Table_BreakfastBoolean'. The duplicate key value is (202208030101). The statement has been terminated.
-            }
-
-            Response.Redirect(Request.Url.ToString());// 这个要在外面，否则执行了第一个之后就中断了
-            
-        }
+        }        
 
         protected void Button_FullAttendance_Click(object sender, EventArgs e)
         {
             LostCard_bool = false;
-            FullAttendanceAndLostCard_ActualQuantity() ;
-            //FullAttendanceAndLostCard_BreakfastBoolean();
+            FullAttendanceAndLostCard() ;
         }
 
         protected void Button_LostCard_Click(object sender, EventArgs e)
         {
             LostCard_bool = true;
-            FullAttendanceAndLostCard_ActualQuantity();
-            FullAttendanceAndLostCard_BreakfastBoolean();
+            FullAttendanceAndLostCard();
         }
     }
 }
