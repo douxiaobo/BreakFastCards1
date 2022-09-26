@@ -42,18 +42,8 @@ namespace BreakfastCards1
                 BindGroupName();                                        //
                 BindActualBreakfast_AddCards();                         //
                 BindActualBreakfast_Add_CheckboxList();                 //
-                GridView1.DataBind();
+                GridView_FourName.DataBind();
             }
-            
-            /*
-            string url = @"http://timor.tech/api/holiday/info/2022-09-01";
-            WebRequest request = WebRequest.Create(url);
-            WebResponse response = request.GetResponse();
-            Stream webstream = response.GetResponseStream();
-            StreamReader streamReader = new StreamReader(webstream);
-            string json = streamReader.ReadToEnd();
-            Label_Json.Text = json;
-            */
         }
 
         protected void BindYear()
@@ -509,26 +499,14 @@ namespace BreakfastCards1
             BindActualBreakfast_Add_CheckboxList();
         }
 
-        protected void DropDownList_ActualBreakfast_AddGroupName_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            BindActualBreakfast_AddCards();
-            BindActualBreakfast_Add_CheckboxList();
-        }
-        
-        protected void DropDownList_ActualBreakfast_AddCards_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            BindActualBreakfast_AddCards();
-            BindActualBreakfast_Add_CheckboxList();            
-        }
-
-        protected void Button_Actual_Breakfast_CheckBoxList_Add(object sender, EventArgs e)     //没有检查
+        protected void Button_Actual_Breakfast_CheckBoxList_Add(object sender, EventArgs e) 
         {
             BreakfastCardsEntities db = new BreakfastCardsEntities();
 
             String year = DropDownList_ActualBreakfast_AddYear.SelectedValue;
             String month = Month_EngToDigit(DropDownList_ActualBreakfast_AddMonth.SelectedValue);
             String groupname=GroupName_Num(DropDownList_ActualBreakfast_AddGroupName.SelectedValue);
-            String cards = EngOrderToDigit(DropDownList_ActualBreakfast_AddCards.SelectedValue);
+            String cards = EngOrderToDigit(DropDownList_ActualBreakfast_AddCards.SelectedItem.Value.ToString());            //这个问题
 
             int actualquantity = 0;
 
@@ -573,7 +551,7 @@ namespace BreakfastCards1
             Response.Redirect(Request.Url.ToString());
         }
 
-        protected void FullAttendanceAndLostCard()       //可能正确
+        protected void FullAttendanceAndLostCard()       
         {
             BreakfastCardsEntities db = new BreakfastCardsEntities();
 
@@ -646,6 +624,24 @@ namespace BreakfastCards1
         {
             LostCard_bool = true;
             FullAttendanceAndLostCard();
+        }
+
+        protected void Button_Actual_Breakfast_Inquiry_Click(object sender, EventArgs e)
+        {
+            BreakfastCardsEntities db = new BreakfastCardsEntities();
+            string year =DropDownList_ActualBreakfast_InquiryYear.SelectedItem.Value.ToString();
+            string month = DropDownList_ActualBreakfast_InquiryMonth.SelectedItem.Value.ToString();
+            string groupname = DropDownList_ActualBreakfast_InquiryGroupName.SelectedItem.Value.ToString();
+            var clients_ActualQuantity = from c in db.Table_ActualQuantity
+                                         where c.Year == year && c.Month == month && c.GroupName == groupname
+                                         select c;
+            GridView_Inquiry_ActualQuantity.DataSource = clients_ActualQuantity.ToList();
+            GridView_Inquiry_ActualQuantity.DataBind();
+            var clients_BreakfastBoolean = from c in db.Table_BreakfastBoolean
+                                           where c.Year == year && c.Month == month && c.GroupName == groupname
+                                           select c;
+            GridView_Inquiry_BreakfastBoolean.DataSource = clients_BreakfastBoolean.ToList();
+            GridView_Inquiry_BreakfastBoolean.DataBind();
         }
     }
 }

@@ -312,6 +312,24 @@ namespace BreakfastCards1
         protected global::System.Web.UI.WebControls.Button Button_Actual_Breakfast_Inquiry;
 
         /// <summary>
+        /// GridView_Inquiry_ActualQuantity 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView GridView_Inquiry_ActualQuantity;
+
+        /// <summary>
+        /// GridView_Inquiry_BreakfastBoolean 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView GridView_Inquiry_BreakfastBoolean;
+
+        /// <summary>
         /// DropDownList_Json_Year 控件。
         /// </summary>
         /// <remarks>
@@ -348,13 +366,13 @@ namespace BreakfastCards1
         protected global::System.Web.UI.WebControls.Label Label_Json;
 
         /// <summary>
-        /// GridView1 控件。
+        /// GridView_FourName 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView GridView1;
+        protected global::System.Web.UI.WebControls.GridView GridView_FourName;
 
         /// <summary>
         /// SqlDataSource1 控件。
@@ -366,13 +384,13 @@ namespace BreakfastCards1
         protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource1;
 
         /// <summary>
-        /// GridView2 控件。
+        /// GridView_ActualQuantity 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView GridView2;
+        protected global::System.Web.UI.WebControls.GridView GridView_ActualQuantity;
 
         /// <summary>
         /// SqlDataSource2 控件。
@@ -384,13 +402,13 @@ namespace BreakfastCards1
         protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource2;
 
         /// <summary>
-        /// GridView3 控件。
+        /// GridView_BreakfastBoolean 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView GridView3;
+        protected global::System.Web.UI.WebControls.GridView GridView_BreakfastBoolean;
 
         /// <summary>
         /// SqlDataSource3 控件。

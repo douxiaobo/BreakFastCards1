@@ -59,8 +59,8 @@
             Add in Actual Breakfast:增加早餐卡数量<br />
             Year:<asp:DropDownList ID="DropDownList_ActualBreakfast_AddYear" runat="server" AutoPostBack="True" OnSelectedIndexChanged="DropDownList_ActualBreakfast_AddYear_SelectedIndexChanged"></asp:DropDownList>
             Month:<asp:DropDownList ID="DropDownList_ActualBreakfast_AddMonth" runat="server" AutoPostBack="True" OnSelectedIndexChanged="DropDownList_ActualBreakfast_AddMonth_SelectedIndexChanged"></asp:DropDownList>
-            Group Name:<asp:DropDownList ID="DropDownList_ActualBreakfast_AddGroupName" runat="server" AutoPostBack="True" OnSelectedIndexChanged="DropDownList_ActualBreakfast_AddGroupName_SelectedIndexChanged"></asp:DropDownList>
-            The <asp:DropDownList ID="DropDownList_ActualBreakfast_AddCards" runat="server" OnSelectedIndexChanged="DropDownList_ActualBreakfast_AddCards_SelectedIndexChanged"  ></asp:DropDownList> card 
+            Group Name:<asp:DropDownList ID="DropDownList_ActualBreakfast_AddGroupName" runat="server" AutoPostBack="True"></asp:DropDownList>
+            The <asp:DropDownList ID="DropDownList_ActualBreakfast_AddCards" runat="server"></asp:DropDownList> card 
             <asp:Button ID="Button_FullAttendance" runat="server" OnClick="Button_FullAttendance_Click" Text="Full Attendance" />
             <asp:Button ID="Button_LostCard" runat="server" OnClick="Button_LostCard_Click" Text="Lost Card" />
             <br />
@@ -76,7 +76,17 @@
             Year:<asp:DropDownList ID="DropDownList_ActualBreakfast_InquiryYear" runat="server" AutoPostBack="false"></asp:DropDownList>
             Month:<asp:DropDownList ID="DropDownList_ActualBreakfast_InquiryMonth" runat="server" AutoPostBack="false"></asp:DropDownList>
             Group Name:<asp:DropDownList ID="DropDownList_ActualBreakfast_InquiryGroupName" runat="server" AutoPostBack="false"></asp:DropDownList>
-            <asp:Button ID="Button_Actual_Breakfast_Inquiry" runat="server" Text="Inquiry"></asp:Button>
+            <asp:Button ID="Button_Actual_Breakfast_Inquiry" runat="server" Text="Inquiry" OnClick="Button_Actual_Breakfast_Inquiry_Click"></asp:Button>
+            <div class="row">
+                <div class="column2">
+                    <asp:GridView ID="GridView_Inquiry_ActualQuantity" runat="server">
+                    </asp:GridView>
+                </div>
+                <div class="column2">
+                    <asp:GridView ID="GridView_Inquiry_BreakfastBoolean" runat="server">
+                    </asp:GridView>
+                </div>   
+            </div>
         </div>
         <hr />
         <div>
@@ -93,9 +103,14 @@
         <hr />
         <style>
             /* 创建三个相等的列 */
-            .column {
+            .column3 {
                 float: left;
                 width: 33.33%;
+            }
+            
+            .column2{
+                float:left;
+                width:50%
             }
  
         /* 列后清除浮动 */
@@ -107,8 +122,8 @@
         </style>
         
         <div class="row">
-            <div class="column">
-                <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" DataKeyNames="ID" DataSourceID="SqlDataSource1">
+            <div class="column3">
+                <asp:GridView ID="GridView_FourName" runat="server" AutoGenerateColumns="False" DataKeyNames="ID" DataSourceID="SqlDataSource1">
                     <Columns>
                         <asp:BoundField DataField="ID" HeaderText="ID" ReadOnly="True" SortExpression="ID" />
                         <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" />
@@ -119,8 +134,8 @@
                 </asp:GridView>
                 <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=BreakfastCards;Integrated Security=True;MultipleActiveResultSets=True;Application Name=EntityFramework" ProviderName="System.Data.SqlClient" SelectCommand="SELECT * FROM [Table_FourName]"></asp:SqlDataSource>
             </div>
-            <div class="column">
-                <asp:GridView ID="GridView2" runat="server" AutoGenerateColumns="False" DataKeyNames="ID" DataSourceID="SqlDataSource2">
+            <div class="column3">
+                <asp:GridView ID="GridView_ActualQuantity" runat="server" AutoGenerateColumns="False" DataKeyNames="ID" DataSourceID="SqlDataSource2">
                     <Columns>
                         <asp:BoundField DataField="ID" HeaderText="ID" ReadOnly="True" SortExpression="ID" />
                         <asp:BoundField DataField="Year" HeaderText="Year" SortExpression="Year" />
@@ -134,8 +149,8 @@
                 </asp:GridView>
                 <asp:SqlDataSource ID="SqlDataSource2" runat="server" ConnectionString="Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=BreakfastCards;Integrated Security=True;MultipleActiveResultSets=True;Application Name=EntityFramework" ProviderName="System.Data.SqlClient" SelectCommand="SELECT * FROM [Table_ActualQuantity]"></asp:SqlDataSource>
             </div>
-            <div class="column">
-                <asp:GridView ID="GridView3" runat="server" AutoGenerateColumns="False" DataKeyNames="ID" DataSourceID="SqlDataSource3">
+            <div class="column3">
+                <asp:GridView ID="GridView_BreakfastBoolean" runat="server" AutoGenerateColumns="False" DataKeyNames="ID" DataSourceID="SqlDataSource3">
                     <Columns>
                         <asp:BoundField DataField="ID" HeaderText="ID" ReadOnly="True" SortExpression="ID" />
                         <asp:BoundField DataField="Year" HeaderText="Year" SortExpression="Year" />
