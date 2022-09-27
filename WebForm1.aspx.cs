@@ -489,15 +489,25 @@ namespace BreakfastCards1
 
         protected void DropDownList_ActualBreakfast_AddYear_SelectedIndexChanged(object sender, EventArgs e)
         {
+            BindYear();
+            BindMonth();
             BindActualBreakfast_AddCards();
             BindActualBreakfast_Add_CheckboxList();
         }
 
         protected void DropDownList_ActualBreakfast_AddMonth_SelectedIndexChanged(object sender, EventArgs e)
         {
+            BindMonth();
             BindActualBreakfast_AddCards();
             BindActualBreakfast_Add_CheckboxList();
         }
+
+        protected void DropDownList_ActualBreakfast_AddGroupName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            BindActualBreakfast_AddCards();
+            BindActualBreakfast_Add_CheckboxList();
+        }
+
 
         protected void Button_Actual_Breakfast_CheckBoxList_Add(object sender, EventArgs e) 
         {
@@ -643,5 +653,7 @@ namespace BreakfastCards1
             GridView_Inquiry_BreakfastBoolean.DataSource = clients_BreakfastBoolean.ToList();
             GridView_Inquiry_BreakfastBoolean.DataBind();
         }
+
+
     }
 }

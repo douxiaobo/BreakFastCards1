@@ -59,7 +59,7 @@
             Add in Actual Breakfast:增加早餐卡数量<br />
             Year:<asp:DropDownList ID="DropDownList_ActualBreakfast_AddYear" runat="server" AutoPostBack="True" OnSelectedIndexChanged="DropDownList_ActualBreakfast_AddYear_SelectedIndexChanged"></asp:DropDownList>
             Month:<asp:DropDownList ID="DropDownList_ActualBreakfast_AddMonth" runat="server" AutoPostBack="True" OnSelectedIndexChanged="DropDownList_ActualBreakfast_AddMonth_SelectedIndexChanged"></asp:DropDownList>
-            Group Name:<asp:DropDownList ID="DropDownList_ActualBreakfast_AddGroupName" runat="server" AutoPostBack="True"></asp:DropDownList>
+            Group Name:<asp:DropDownList ID="DropDownList_ActualBreakfast_AddGroupName" runat="server" AutoPostBack="True" OnSelectedIndexChanged="DropDownList_ActualBreakfast_AddGroupName_SelectedIndexChanged"></asp:DropDownList>
             The <asp:DropDownList ID="DropDownList_ActualBreakfast_AddCards" runat="server"></asp:DropDownList> card 
             <asp:Button ID="Button_FullAttendance" runat="server" OnClick="Button_FullAttendance_Click" Text="Full Attendance" />
             <asp:Button ID="Button_LostCard" runat="server" OnClick="Button_LostCard_Click" Text="Lost Card" />
