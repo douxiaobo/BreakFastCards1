@@ -220,8 +220,7 @@ namespace BreakfastCards1
 
         protected void BindActualBreakfast_Add_CheckboxList()
         {            
-            CheckBoxList_ActualBreakfast_Add.Items.Clear();
-            
+            CheckBoxList_ActualBreakfast_Add.Items.Clear();            
 
             int workdays_Breakfast_Add = workdays(DropDownList_ActualBreakfast_AddYear.Text.ToString(), DropDownList_ActualBreakfast_AddMonth.Text.ToString());
 
@@ -386,7 +385,7 @@ namespace BreakfastCards1
                 string Date = DropDownList_Inquiry_Year.Text + "-" + DropDownList_Inquiry_Month.Text;
                 var clients = from c in db.Table_FourName
                               where c.Date == Date
-                              select c;
+                              select c; 
                 foreach (var client in clients)
                 {
                     Label_Inquiry.Text += "Data:" + client.Date + "----" + "GroupName:" + client.GroupName + "----" + "Manager:" + client.Manager + "<br/>";

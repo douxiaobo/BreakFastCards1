@@ -127,6 +127,7 @@
     </Content>
     <Content Include="Web.config" />
     <Content Include="WebForm1.aspx" />
+    <Content Include="WebForm_AARecord.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -167,6 +168,13 @@
     </Compile>
     <Compile Include="WebForm1.aspx.designer.cs">
       <DependentUpon>WebForm1.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebForm_AARecord.aspx.cs">
+      <DependentUpon>WebForm_AARecord.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebForm_AARecord.aspx.designer.cs">
+      <DependentUpon>WebForm_AARecord.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
