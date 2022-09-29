@@ -5,7 +5,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title></title>
+    <title>Breakfast Manager System</title>
+    <script src="C:\Users\a-xiaobodou\OneDrive - Microsoft\Projects\ASP.NET\BreakfastCards1\echarts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -77,6 +79,33 @@
             Month:<asp:DropDownList ID="DropDownList_ActualBreakfast_InquiryMonth" runat="server" AutoPostBack="false"></asp:DropDownList>
             Group Name:<asp:DropDownList ID="DropDownList_ActualBreakfast_InquiryGroupName" runat="server" AutoPostBack="false"></asp:DropDownList>
             <asp:Button ID="Button_Actual_Breakfast_Inquiry" runat="server" Text="Inquiry" OnClick="Button_Actual_Breakfast_Inquiry_Click"></asp:Button>
+            
+                    <div id="main" style="width:1000px;height:400px;"></div>
+        <script type="text/javascript">
+
+            var chartDom = document.getElementById('main');
+            var myChart = echarts.init(chartDom);
+            var option;
+
+            option = {
+                xAxis: {
+                    type: 'category',
+                    data: ['Intune_First', 'Intune_Second', 'Intune_Third', 'Intune_Fourth', 'Office_First', 'Office_Second', 'Workdays']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                        data: [13, 21, 22, 21, 7, 23, 23],
+                        type: 'bar'
+                    }
+                ]
+            };
+
+            myChart.setOption(option);
+        </script>
+
             <div class="row">
                 <div class="column2">
                     <asp:GridView ID="GridView_Inquiry_ActualQuantity" runat="server">
@@ -99,7 +128,17 @@
             <asp:Button ID="Button_Json" runat="server" Text="Workdays" OnClick="Button_Json_Click" />
             <br />
             <asp:Label ID="Label_Json" runat="server"></asp:Label>
+            <br />
+            <br />
         </div>
+        <hr />
+
+
+
+ 
+   
+        
+
         <hr />
         <style>
             /* 创建三个相等的列 */
