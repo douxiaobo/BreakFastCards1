@@ -481,10 +481,14 @@ namespace BreakfastCards1
 
         protected void Button_Json_Click(object sender, EventArgs e)
         {
+            Label_Json.Text = "";
             int days = DateTime.DaysInMonth(Convert.ToInt16(DropDownList_Json_Year.Text), Convert.ToInt16(Month_EngToDigit(DropDownList_Json_Month.Text)));
             int Workdays = workdays(DropDownList_Json_Year.Text, DropDownList_Json_Month.Text);
             Label_Json.Text += "The Days of Month:" + days + "<br/>";
             Label_Json.Text += "The WorkDays of Month:" + Workdays.ToString() + "<br/>";
+            Response.Write("Okay!Response.");        //顶部可看到的
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "", "alert('Okay!ScriptManager.')", true);
+            Button_Json.Visible = false;
         }
 
         protected void DropDownList_ActualBreakfast_AddYear_SelectedIndexChanged(object sender, EventArgs e)

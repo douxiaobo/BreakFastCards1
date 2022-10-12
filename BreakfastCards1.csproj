@@ -113,7 +113,38 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assets\bootstrap\css\bootstrap-grid.min.css" />
+    <Content Include="assets\bootstrap\css\bootstrap-reboot.min.css" />
+    <Content Include="assets\bootstrap\css\bootstrap.min.css" />
+    <Content Include="assets\bootstrap\js\bootstrap.bundle.min.js" />
+    <Content Include="assets\dropdown\css\style.css" />
+    <Content Include="assets\dropdown\js\navbar-dropdown.js" />
+    <Content Include="assets\images\1.png" />
+    <Content Include="assets\images\2.png" />
+    <Content Include="assets\images\3.png" />
+    <Content Include="assets\images\mbr-1.jpeg" />
+    <Content Include="assets\images\mbr-10.jpeg" />
+    <Content Include="assets\images\mbr-10.jpg" />
+    <Content Include="assets\images\mbr-5.jpg" />
+    <Content Include="assets\images\mbr-8.jpeg" />
+    <Content Include="assets\images\mbr-9.jpeg" />
+    <Content Include="assets\images\mbr.jpeg" />
+    <Content Include="assets\images\mbr.jpg" />
+    <Content Include="assets\images\mbr.png" />
+    <Content Include="assets\images\team1.jpg" />
+    <Content Include="assets\images\team2.jpg" />
+    <Content Include="assets\mobirise\css\mbr-additional.css" />
+    <Content Include="assets\smoothscroll\smooth-scroll.js" />
+    <Content Include="assets\socicon\css\styles.css" />
+    <Content Include="assets\socicon\fonts\socicon.svg" />
+    <Content Include="assets\theme\css\style.css" />
+    <Content Include="assets\theme\js\script.js" />
+    <Content Include="assets\web\assets\mobirise-icons2\mobirise2.css" />
+    <Content Include="assets\web\assets\mobirise-icons2\mobirise2.svg" />
+    <Content Include="assets\ytplayer\index.js" />
     <Content Include="Global.asax" />
+    <Content Include="index.aspx" />
+    <Content Include="index.html" />
     <Content Include="Model1.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Model1.edmx</DependentUpon>
@@ -128,6 +159,7 @@
     <Content Include="Web.config" />
     <Content Include="WebForm1.aspx" />
     <Content Include="WebForm_AARecord.aspx" />
+    <Content Include="WebForm__AARegistration.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -135,6 +167,13 @@
     <Compile Include="Core\Holidays.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="index.aspx.cs">
+      <DependentUpon>index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="index.aspx.designer.cs">
+      <DependentUpon>index.aspx</DependentUpon>
     </Compile>
     <Compile Include="Model1.Context.cs">
       <AutoGen>True</AutoGen>
@@ -176,6 +215,13 @@
     <Compile Include="WebForm_AARecord.aspx.designer.cs">
       <DependentUpon>WebForm_AARecord.aspx</DependentUpon>
     </Compile>
+    <Compile Include="WebForm__AARegistration.aspx.cs">
+      <DependentUpon>WebForm__AARegistration.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebForm__AARegistration.aspx.designer.cs">
+      <DependentUpon>WebForm__AARegistration.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
@@ -186,7 +232,16 @@
     <Content Include="Model1.edmx.diagram">
       <DependentUpon>Model1.edmx</DependentUpon>
     </Content>
+    <Content Include="assets\images\hashes.json" />
+    <Content Include="assets\socicon\fonts\socicon.eot" />
+    <Content Include="assets\socicon\fonts\socicon.ttf" />
+    <Content Include="assets\socicon\fonts\socicon.woff" />
+    <Content Include="assets\socicon\fonts\socicon.woff2" />
+    <Content Include="assets\web\assets\mobirise-icons2\mobirise2.eot" />
+    <Content Include="assets\web\assets\mobirise-icons2\mobirise2.ttf" />
+    <Content Include="assets\web\assets\mobirise-icons2\mobirise2.woff" />
     <None Include="packages.config" />
+    <Content Include="project.mobirise" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

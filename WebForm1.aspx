@@ -201,8 +201,7 @@
                 </asp:GridView>
                 <asp:SqlDataSource ID="SqlDataSource3" runat="server" ConnectionString="Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=BreakfastCards;Integrated Security=True;MultipleActiveResultSets=True;Application Name=EntityFramework" ProviderName="System.Data.SqlClient" SelectCommand="SELECT * FROM [Table_BreakfastBoolean]"></asp:SqlDataSource>
             </div>
-        </div>
-        
+        </div>        
     </form>
 </body>
 </html>
