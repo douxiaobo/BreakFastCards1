@@ -165,12 +165,18 @@ namespace BreakfastCards1
             BreakfastCardsEntities db = new BreakfastCardsEntities();
             string date = ThisYear + "-" + ThisMonth;
             string datelatemonth = ThisMonth + "-" + NextMonth;
+            string year = DropDownList_AddYear_Collection.Text;
+            string month = DropDownList_AddMonth_Collection.Text;
             var clients = from c in db.Table_FourName
                           where c.Date == date || c.Date==datelatemonth
                           select c;
+            var clients_ActualQuantity = from e in db.Table_ActualQuantity
+                                         where e.Year == year && e.Month == month
+                                         select e;
             GridView_Registration.DataSource = clients.ToList();
+            GridView_Collection.DataSource = clients_ActualQuantity.ToList();
             GridView_Registration.DataBind();
-            
+            GridView_Collection.DataBind();
         }
         protected void BindCard()
         {
@@ -240,7 +246,8 @@ namespace BreakfastCards1
                     if (key.StartsWith(Month_Digit))
                         HolidaysList.Add(key);
                 }
-                bool workdaybool;
+                bool workdaybool=true;
+                /*
                 for (int i = 1; i <= days; i++)
                 {
                     string date_check = Month_Digit + "-" + i.ToString().PadLeft(2, '0');
@@ -260,6 +267,41 @@ namespace BreakfastCards1
                             workdays++;
                             WorkdaysList.Add(date_check);
                         }
+                    }
+                    dt = dt.AddDays(1);
+                }
+                */
+                for(int i=1;i<=days;i++)
+                {                    
+                    string date_check = Month_Digit + "-" + i.ToString().PadLeft(2, '0');
+                    if (dt.DayOfWeek!=DayOfWeek.Saturday&&dt.DayOfWeek!=DayOfWeek.Sunday)
+                    {                        
+                        foreach(string date in HolidaysList)
+                        {
+                            workdaybool = true;
+                            if (date_check==date)
+                            {
+                                workdaybool = false;
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        workdaybool=false;
+                        foreach(string date in HolidaysList)
+                        {
+                            if(date_check==date)
+                            {
+                                workdaybool = true;
+                                break;
+                            }
+                        }
+                    }
+                    if(workdaybool==true)
+                    {
+                        workdays++;
+                        WorkdaysList.Add(date_check);
                     }
                     dt = dt.AddDays(1);
                 }
@@ -413,6 +455,10 @@ namespace BreakfastCards1
             db.Table_ActualQuantity.Add(a);
             db.SaveChanges();
             Response.Redirect(Request.Url.ToString());
+        }
+        protected void DropDownList_AddGroupName_Collection_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            BindCard();
         }
     }
 }

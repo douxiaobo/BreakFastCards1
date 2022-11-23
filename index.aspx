@@ -237,7 +237,7 @@
                                         <div>
                                             Year:<asp:DropDownList ID="DropDownList_AddYear_Collection" runat="server"></asp:DropDownList>
                                             Month:<asp:DropDownList ID="DropDownList_AddMonth_Collection" runat="server"></asp:DropDownList>
-                                            Group Name:<asp:DropDownList ID="DropDownList_AddGroupName_Collection" runat="server"></asp:DropDownList>
+                                            Group Name:<asp:DropDownList ID="DropDownList_AddGroupName_Collection" runat="server" OnSelectedIndexChanged="DropDownList_AddGroupName_Collection_SelectedIndexChanged"></asp:DropDownList>
                                             The
                                             <asp:DropDownList ID="DropDownList_AddCards_Collection" runat="server"></asp:DropDownList>
                                             card 

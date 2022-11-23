@@ -242,6 +242,12 @@
     <Content Include="assets\web\assets\mobirise-icons2\mobirise2.woff" />
     <None Include="packages.config" />
     <Content Include="project.mobirise" />
+    <None Include="Properties\PublishProfiles\XiaoBo - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\XiaoBo - FTP1.pubxml" />
+    <None Include="Properties\PublishProfiles\XiaoBo - ReadOnly - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\XiaoBo - ReadOnly - FTP1.pubxml" />
+    <None Include="Properties\PublishProfiles\XiaoBo - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\XiaoBo - Web Deploy1.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
