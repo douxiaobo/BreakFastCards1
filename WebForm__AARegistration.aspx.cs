@@ -23,7 +23,6 @@ namespace BreakfastCards1
                 BindGridView();
             }
         }
-
         protected void Button_Add_Comfirm_Click(object sender, EventArgs e)
         {
             Table_FourName a = new Table_FourName();
@@ -87,12 +86,13 @@ namespace BreakfastCards1
             DropDownList_Add_Year.Items.Clear();
 
             //年份Year
-             int ThisYearInt = Convert.ToInt16(ThisYear);
-            if (ThisMonth == "December")
-                ThisYearInt++;
+            int ThisYearInt = Convert.ToInt16(ThisYear);
+            
             for (int i = ThisYearInt; i >= 1997; i--)
             {
                 DropDownList_Add_Year.Items.Add(i.ToString());
+                if (i == ThisYearInt && ThisMonth == "December")
+                    DropDownList_Add_Year.Items.Add((i + 1).ToString());
             }
         }
         protected void BindMonth()
@@ -150,8 +150,17 @@ namespace BreakfastCards1
             BreakfastCardsEntities db = new BreakfastCardsEntities();
             string date = ThisYear + "-" + ThisMonth;
             string datelastmonth = ThisYear + "-" + LastMonth;
+            string datenextmonth;
+            if(ThisMonth=="December")
+            {
+                datenextmonth = DateTime.Now.AddYears(+1).ToString("yyyy") +"-"+ "January";
+            }
+            else
+            {
+                datenextmonth = DateTime.Now.ToString("yyyy") + "-" + DateTime.Now.AddMonths(+1).ToString();
+            }
             var clients = from c in db.Table_FourName
-                          where c.Date == date || c.Date == datelastmonth
+                          where c.Date == date || c.Date == datelastmonth || c.Date==datenextmonth
                           select c;
             GridView1.DataSource = clients.ToList();
             GridView1.DataBind();

@@ -255,11 +255,12 @@ namespace BreakfastCards1
 
             //年份Year
             int ThisYearInt = Convert.ToInt16(ThisYear);
-            if (ThisMonth == "December")
-                ThisYearInt++;
+            
             for (int i = ThisYearInt; i >= 1997; i--)
             {
                 DropDownList_AddYear.Items.Add(i.ToString());
+                if (i == ThisYearInt && ThisMonth == "December")
+                    DropDownList_AddYear.Items.Add((i + 1).ToString());
             }
         }
 
@@ -344,7 +345,7 @@ namespace BreakfastCards1
 
             try
             {
-                int a = Convert.ToInt16(client.Quantity.Value);
+                int a = Convert.ToInt16(client.Quantity.Value);      //System.NullReferenceException: 'Object reference not set to an instance of an object.'client was null.
                 for (int i = 1; i <= a; i++)
                 {
                     DropDownList_AddCards.Items.Add(ActualBreakfast_Add_DigitToEng[i]);

@@ -61,8 +61,7 @@ namespace BreakfastCards1
 
             //年份Year
             int ThisYearInt = Convert.ToInt16(ThisYear);
-            if (ThisMonth == "December")
-                ThisYearInt++;
+
             for (int i = ThisYearInt; i >= 1997; i--)
             {
                 DropDownList_Add_Year.Items.Add(i.ToString());
@@ -72,7 +71,18 @@ namespace BreakfastCards1
                 DropDownList_Json_Year.Items.Add(i.ToString());
                 DropDownList_ActualBreakfast_AddYear.Items.Add(i.ToString());
                 DropDownList_ActualBreakfast_InquiryYear.Items.Add(i.ToString());
+                if (i == ThisYearInt&& ThisMonth == "December")
+                {
+                    DropDownList_Add_Year.Items.Add((i+1).ToString());
+                    DropDownList_Delete_Year.Items.Add((i + 1).ToString());
+                    DropDownList_Revise_Year.Items.Add((i + 1).ToString());
+                    DropDownList_Inquiry_Year.Items.Add((i + 1).ToString());
+                    DropDownList_Json_Year.Items.Add((i + 1).ToString());
+                    DropDownList_ActualBreakfast_AddYear.Items.Add((i + 1).ToString());
+                    DropDownList_ActualBreakfast_InquiryYear.Items.Add((i + 1).ToString());
+                }
             }
+            
         }
 
         protected void BindMonth()
@@ -104,26 +114,43 @@ namespace BreakfastCards1
             Month_DigitToEng.Add(12, "December");
 
             string ThisMonth = DateTime.Now.ToString("MM");
-            for(int i=Convert.ToInt16(ThisMonth)-1;i<=12;i++)
+            if(ThisMonth=="January"&& ThisMonth == "February")
             {
-                DropDownList_ActualBreakfast_AddMonth.Items.Add(Month_DigitToEng[i]);
-                DropDownList_ActualBreakfast_InquiryMonth.Items.Add(Month_DigitToEng[i]);
-                DropDownList_Add_Month.Items.Add(Month_DigitToEng[i]);
-                DropDownList_Delete_Month.Items.Add(Month_DigitToEng[i]);
-                DropDownList_Inquiry_Month.Items.Add(Month_DigitToEng[i]);
-                DropDownList_Json_Month.Items.Add(Month_DigitToEng[i]);
-                DropDownList_Revise_Month.Items.Add(Month_DigitToEng[i]);
+                for (int i = 1; i <= 12; i++)
+                {
+                    DropDownList_ActualBreakfast_AddMonth.Items.Add(Month_DigitToEng[i]);
+                    DropDownList_ActualBreakfast_InquiryMonth.Items.Add(Month_DigitToEng[i]);
+                    DropDownList_Add_Month.Items.Add(Month_DigitToEng[i]);
+                    DropDownList_Delete_Month.Items.Add(Month_DigitToEng[i]);
+                    DropDownList_Inquiry_Month.Items.Add(Month_DigitToEng[i]);
+                    DropDownList_Json_Month.Items.Add(Month_DigitToEng[i]);
+                    DropDownList_Revise_Month.Items.Add(Month_DigitToEng[i]);
+                }
             }
-            for(int i=1;i<Convert.ToInt16(ThisMonth)-1;i++)
+            else
             {
-                DropDownList_ActualBreakfast_AddMonth.Items.Add(Month_DigitToEng[i]);
-                DropDownList_ActualBreakfast_InquiryMonth.Items.Add(Month_DigitToEng[i]);
-                DropDownList_Add_Month.Items.Add(Month_DigitToEng[i]);
-                DropDownList_Delete_Month.Items.Add(Month_DigitToEng[i]);
-                DropDownList_Inquiry_Month.Items.Add(Month_DigitToEng[i]);
-                DropDownList_Json_Month.Items.Add(Month_DigitToEng[i]);
-                DropDownList_Revise_Month.Items.Add(Month_DigitToEng[i]);
+                for (int i = Convert.ToInt16(ThisMonth) - 1; i <= 12; i++)
+                {
+                    DropDownList_ActualBreakfast_AddMonth.Items.Add(Month_DigitToEng[i]);
+                    DropDownList_ActualBreakfast_InquiryMonth.Items.Add(Month_DigitToEng[i]);
+                    DropDownList_Add_Month.Items.Add(Month_DigitToEng[i]);
+                    DropDownList_Delete_Month.Items.Add(Month_DigitToEng[i]);
+                    DropDownList_Inquiry_Month.Items.Add(Month_DigitToEng[i]);
+                    DropDownList_Json_Month.Items.Add(Month_DigitToEng[i]);
+                    DropDownList_Revise_Month.Items.Add(Month_DigitToEng[i]);
+                }
+                for (int i = 1; i < Convert.ToInt16(ThisMonth) - 1; i++)
+                {
+                    DropDownList_ActualBreakfast_AddMonth.Items.Add(Month_DigitToEng[i]);
+                    DropDownList_ActualBreakfast_InquiryMonth.Items.Add(Month_DigitToEng[i]);
+                    DropDownList_Add_Month.Items.Add(Month_DigitToEng[i]);
+                    DropDownList_Delete_Month.Items.Add(Month_DigitToEng[i]);
+                    DropDownList_Inquiry_Month.Items.Add(Month_DigitToEng[i]);
+                    DropDownList_Json_Month.Items.Add(Month_DigitToEng[i]);
+                    DropDownList_Revise_Month.Items.Add(Month_DigitToEng[i]);
+                }
             }
+            
             
             /*
             Dictionary<int, string>.ValueCollection MonthCol = Month_DigitToEng.Values;
@@ -205,7 +232,7 @@ namespace BreakfastCards1
 
             try
             {
-                int a = Convert.ToInt16(client.Quantity.Value);
+                int a = Convert.ToInt16(client.Quantity.Value);     //System.NullReferenceException:“Object reference not set to an instance of an object.”client 是 null。
                 for (int i = 1; i <= a; i++)
                 {
                     DropDownList_ActualBreakfast_AddCards.Items.Add(ActualBreakfast_Add_DigitToEng[i]);
