@@ -492,11 +492,23 @@ namespace BreakfastCards1
                                 break;
                             }                                
                         }
-                        if (workdaybool == true)
+                    }
+                    else
+                    {
+                        workdaybool=false;;
+                        foreach(string date in HolidaysList)
                         {
-                            workdays++;
-                            WorkdaysList.Add(date_check);
+                            if(date_check==date)
+                            {
+                                workdaybool = true;
+                                break;
+                            }
                         }
+                    }
+                    if(workdaybool==true)
+                    {
+                        workdays++;
+                        WorkdaysList.Add(date_check);
                     }
                     dt = dt.AddDays(1);
                 }
